@@ -26,8 +26,8 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <img src="ruta-a-tu-logo.png" alt="Astrolus Logo" className="h-8 mr-2" />
-            <h1 className="text-2xl font-bold">Astrolus</h1>
+            <img src="/speed-project-ico.svg" alt="Speed Project" className="h-8 mr-2" />
+            <h1 className="text-2xl font-bold">Speed Project</h1>
           </div>
           <div className="hidden md:flex items-center space-x-8">
             <a href="#features" className="text-gray-800 hover:text-purple-600">Features</a>

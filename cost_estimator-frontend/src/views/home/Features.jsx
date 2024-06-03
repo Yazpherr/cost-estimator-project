@@ -1,6 +1,6 @@
 import React from 'react';
 import CalendarIcon from '../../components/icons/CalendarIcon';  // Asegúrate de que la ruta sea correcta
-import BargraphIcon from '../../components/icons/BargraphIco';  // Asegúrate de que la ruta sea correcta
+import BargraphIcon from '../../components/icons/BargraphIcon';  // Asegúrate de que la ruta sea correcta
 import FastTimerIcon from '../../components/icons/FastTimerIcon';  // Asegúrate de que la ruta sea correcta
 import MoneyIcon from '../../components/icons/MoneyIcon';  // Asegúrate de que la ruta sea correcta
 import FollowUpIcon from '../../components/icons/FollowUpIcon';  // Asegúrate de que la ruta sea correcta
@@ -15,7 +15,7 @@ const features = [
   {
     title: 'Estimación de Esfuerzo',
     description: 'Calcula el esfuerzo necesario para cada tarea y proyecto, mejorando la precisión y la planificación.',
-    icon: <BargraphIco width={40} height={40} color="#000000" className="mb-4 group-hover:text-primaryBlue" />,
+    icon: <BargraphIcon width={40} height={40} color="#000000" className="mb-4 group-hover:text-primaryBlue" />,
   },
   {
     title: 'Gestión de Tiempos',

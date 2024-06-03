@@ -4,18 +4,11 @@ import { FaTwitter, FaFacebook, FaLinkedin } from 'react-icons/fa';
 const Footer = () => {
   return (
     <footer className="bg-white text-gray-800 py-8">
-      <div className="max-w-7xl mx-auto text-center">
+      <div className="max-w-7xl mx-auto text-center px-4">
         <div className="mb-4">
-          <img src="ruta-a-tu-logo.png" alt="Astrolus Logo" className="mx-auto h-8 mb-2" />
-          <h2 className="text-2xl font-bold">Astrolus</h2>
+          <img src="/speed-project-ico.svg" alt="Speed Project Icono" className="mx-auto h-10 mb-2" />
+          <h2 className="text-2xl font-bold">Speed Project</h2>
         </div>
-        <ul className="flex justify-center space-x-8 mb-4">
-          <li><a href="#home" className="hover:underline">Home</a></li>
-          <li><a href="#features" className="hover:underline">Features</a></li>
-          <li><a href="#solution" className="hover:underline">Solution</a></li>
-          <li><a href="#reviews" className="hover:underline">Reviews</a></li>
-          <li><a href="#pricing" className="hover:underline">Pricing</a></li>
-        </ul>
         <div className="flex justify-center space-x-4 mb-4">
           <a href="https://twitter.com" aria-label="Twitter" className="text-gray-600 hover:text-gray-800 transition duration-300">
             <FaTwitter size={24} />
@@ -27,10 +20,11 @@ const Footer = () => {
             <FaLinkedin size={24} />
           </a>
         </div>
-        <p className="text-gray-600">Copyright © Astrolus 2021 - Present | All rights reserved</p>
+        <p className="text-gray-600 text-sm sm:text-base">Copyright © Speed Project 2024 | Todos los derechos reservados</p>
       </div>
     </footer>
   );
 };
 
 export default Footer;
+

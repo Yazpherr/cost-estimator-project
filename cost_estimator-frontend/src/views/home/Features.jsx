@@ -1,36 +1,41 @@
 import React from 'react';
-import { FaStar, FaShieldAlt, FaCreditCard, FaBolt, FaSearch } from 'react-icons/fa';
+import CalendarIcon from '../../components/icons/CalendarIcon';  // Asegúrate de que la ruta sea correcta
+import BargraphIcon from '../../components/icons/BargraphIco';  // Asegúrate de que la ruta sea correcta
+import FastTimerIcon from '../../components/icons/FastTimerIcon';  // Asegúrate de que la ruta sea correcta
+import MoneyIcon from '../../components/icons/MoneyIcon';  // Asegúrate de que la ruta sea correcta
+import FollowUpIcon from '../../components/icons/FollowUpIcon';  // Asegúrate de que la ruta sea correcta
+import TaskIcon from '../../components/icons/TaskIcon';  // Asegúrate de que la ruta sea correcta
 
 const features = [
   {
-    title: 'User centred',
-    description: 'Dolorem aliquid officiis quae ipsum nobis libero alias iure nobis dicta.',
-    icon: <FaStar className="text-4xl text-yellow-500 mb-4" />,
+    title: 'Planificación Eficiente',
+    description: 'Organiza y prioriza tus tareas de manera eficiente para asegurar la entrega puntual de tus proyectos.',
+    icon: <CalendarIcon width={40} height={40} color="#000000" className="mb-4 group-hover:text-primaryBlue" />,
   },
   {
-    title: 'Security first',
-    description: 'Dolorem aliquid officiis quae ipsum nobis libero alias iure nobis dicta.',
-    icon: <FaShieldAlt className="text-4xl text-blue-500 mb-4" />,
+    title: 'Estimación de Esfuerzo',
+    description: 'Calcula el esfuerzo necesario para cada tarea y proyecto, mejorando la precisión y la planificación.',
+    icon: <BargraphIco width={40} height={40} color="#000000" className="mb-4 group-hover:text-primaryBlue" />,
   },
   {
-    title: 'Simple Payment',
-    description: 'Dolorem aliquid officiis quae ipsum nobis libero alias iure nobis dicta.',
-    icon: <FaCreditCard className="text-4xl text-green-500 mb-4" />,
+    title: 'Gestión de Tiempos',
+    description: 'Monitorea y administra el tiempo dedicado a cada tarea para optimizar la productividad.',
+    icon: <FastTimerIcon width={40} height={40} color="#000000" className="mb-4 group-hover:text-primaryBlue" />,
   },
   {
-    title: 'Fast speed',
-    description: 'Dolorem aliquid officiis quae ipsum nobis libero alias iure nobis dicta.',
-    icon: <FaBolt className="text-4xl text-red-500 mb-4" />,
+    title: 'Cálculo de Sueldos',
+    description: 'Automatiza el cálculo de sueldos en función del tiempo y esfuerzo dedicados, asegurando pagos justos y precisos.',
+    icon: <MoneyIcon width={40} height={40} color="#000000" className="mb-4 group-hover:text-primaryBlue" />,
   },
   {
-    title: 'Search engine',
-    description: 'Dolorem aliquid officiis quae ipsum nobis libero alias iure nobis dicta.',
-    icon: <FaSearch className="text-4xl text-purple-500 mb-4" />,
+    title: 'Seguimiento de Proyectos',
+    description: 'Realiza un seguimiento detallado del avance de tus proyectos para mantenerte al tanto de cada etapa.',
+    icon: <FollowUpIcon width={40} height={40} color="#000000" className="mb-4 group-hover:text-primaryBlue" />,
   },
   {
-    title: 'Search engine',
-    description: 'Dolorem aliquid officiis quae ipsum nobis libero alias iure nobis dicta.',
-    icon: <FaSearch className="text-4xl text-purple-500 mb-4" />,
+    title: 'Gestión de Tareas',
+    description: 'Administra tus tareas de manera efectiva, asignando responsables y estableciendo fechas límite claras.',
+    icon: <TaskIcon width={40} height={40} color="#000000" className="mb-4 group-hover:text-primaryBlue" />,
   },
 ];
 
@@ -38,15 +43,15 @@ const Features = () => {
   return (
     <section className="bg-white text-gray-800 py-20">
       <div className="max-w-7xl mx-auto text-center mb-12">
-        <h2 className="text-4xl font-bold mb-4">Shaped to meet your needs</h2>
+        <h2 className="text-4xl font-bold mb-4">Potencia la Gestión de Tus Proyectos</h2>
         <p className="text-lg text-gray-600">
-          Sapiente optio repellendus atque illum odio! Fugit sit expedita deserunt dolorum molestias.
+          Optimiza la planificación, seguimiento, y administración de tareas, tiempos y sueldos, mejorando la eficiencia y precisión en cada proyecto.
         </p>
       </div>
       <div className="max-w-7xl mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((feature, index) => (
-          <div key={index} className="bg-gray-100 p-6 rounded-lg shadow-lg">
-            <div className="flex justify-center mb-6">
+          <div key={index} className="bg-gray-100 p-6 rounded-lg shadow-lg flex flex-col items-center text-center group hover:bg-gray-200 transition-colors duration-300">
+            <div className="mb-6">
               {feature.icon}
             </div>
             <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>

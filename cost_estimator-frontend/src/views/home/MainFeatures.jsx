@@ -1,21 +1,16 @@
-import React from 'react';
-import { FaShieldAlt, FaCreditCard, FaStar } from 'react-icons/fa';
+import SecureIcon from '../../components/icons/SecureIcon';  // Asegúrate de que la ruta sea correcta
+import SupportIcon from '../../components/icons/SupportIcon';  // Asegúrate de que la ruta sea correcta
 
 const mainFeatures = [
   {
-    title: 'Safelus',
-    description: 'Dolorem aliquid officiis quae ipsum nobis libero alias iure nobis dicta.',
-    icon: <FaShieldAlt className="text-4xl text-green-500 mb-4" />,
+    title: 'Seguridad de Datos',
+    description: 'Protege tus datos y la privacidad de tus proyectos con nuestras avanzadas medidas de seguridad.',
+    icon: <SecureIcon width={40} height={40} className="mb-4 group-hover:text-primaryBlue" />,
   },
   {
-    title: 'Paylus',
-    description: 'Dolorem aliquid officiis quae ipsum nobis libero alias iure nobis dicta.',
-    icon: <FaCreditCard className="text-4xl text-blue-500 mb-4" />,
-  },
-  {
-    title: 'TL Certification',
-    description: 'Dolorem aliquid officiis quae ipsum nobis libero alias iure nobis dicta.',
-    icon: <FaStar className="text-4xl text-yellow-500 mb-4" />,
+    title: 'Soporte Técnico',
+    description: 'Accede a soporte técnico prioritario para resolver cualquier problema rápidamente.',
+    icon: <SupportIcon width={40} height={40} className="mb-4 group-hover:text-primaryBlue" />,
   },
 ];
 
@@ -23,12 +18,12 @@ const MainFeatures = () => {
   return (
     <section className="bg-white text-gray-800 py-20">
       <div className="max-w-7xl mx-auto text-center mb-12">
-        <h2 className="text-4xl font-bold mb-4">Customize your customer experience, Go beyond with our top products</h2>
+        <h2 className="text-4xl font-bold mb-4">Te Garantizamos Seguridad y Soporte Técnico</h2>
       </div>
-      <div className="max-w-7xl mx-auto grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="max-w-7xl mx-auto grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
         {mainFeatures.map((feature, index) => (
-          <div key={index} className="bg-gray-100 p-6 rounded-lg shadow-lg">
-            <div className="flex justify-center mb-6">
+          <div key={index} className="bg-gray-100 p-6 rounded-lg shadow-lg flex flex-col items-center text-center group hover:bg-gray-200 transition-colors duration-300">
+            <div className="mb-6">
               {feature.icon}
             </div>
             <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>

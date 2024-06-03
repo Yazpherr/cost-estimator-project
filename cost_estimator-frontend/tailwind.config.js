@@ -8,6 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        primaryBlue: '#1F42B1',
         primary: '#14A800',
         negro: '#1F1F1F',
         badged: '#E7FFEC',

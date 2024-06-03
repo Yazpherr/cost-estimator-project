@@ -7,12 +7,12 @@ const Hero = () => {
             Lleva Tus Proyectos al Siguiente Nivel
           </h1>
           <p className="text-lg mb-8">
-            Simplifica la planificación, el seguimiento y la colaboración en tus proyectos.
+            Simplifica la planificación, el seguimiento y la colaboración en tus
+            proyectos.
           </p>
           <div className="flex space-x-4">
             <a
               href="#get-started"
-              //  className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-300"
               className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-300"
             >
               Comenzar Ahora
@@ -26,11 +26,17 @@ const Hero = () => {
           </div>
         </div>
         <div className="w-full md:w-1/2 flex justify-center md:justify-end">
-          <img
-            src="ruta-a-tu-imagen.jpg"
-            alt="Business management illustration"
-            className="w-3/4 md:w-full max-w-md"
-          />
+          <div className="relative">
+            <img
+              src="/laptop-hero-3.jpg"
+              alt="Business management illustration"
+              className="w-3/4 md:w-full max-w-lg rounded-lg"
+              style={{
+                maskImage: 'linear-gradient(to bottom, rgba(255, 255, 255, 1) 90%, rgba(255, 255, 255, 0) 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, rgba(255, 255, 255, 1) 90%, rgba(255, 255, 255, 0) 100%)'
+              }}
+            />
+          </div>
         </div>
       </div>
     </section>

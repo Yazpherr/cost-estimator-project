@@ -2,7 +2,7 @@
 
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerAdmin, loginAdmin, registerTeamMember, loginTeamMember, loginProjectManager, logout, registerProjectManager } from '../services/api';
+import { registerAdmin, registerTeamMember, registerProjectManager, loginAdmin, loginTeamMember, loginProjectManager, logout } from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -31,6 +31,28 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const handleRegisterTeamMember = async (userData) => {
+        try {
+            const response = await registerTeamMember(userData);
+            console.log('Team member registered:', response);
+            return response;
+        } catch (error) {
+            console.error('Error registering team member:', error);
+            throw error;
+        }
+    };
+
+    const handleRegisterProjectManager = async (userData) => {
+        try {
+            const response = await registerProjectManager(userData);
+            console.log('Project manager registered:', response);
+            return response;
+        } catch (error) {
+            console.error('Error registering project manager:', error);
+            throw error;
+        }
+    };
+
     const handleLoginAdmin = async (userData) => {
         try {
             const response = await loginAdmin(userData);
@@ -42,28 +64,6 @@ export const AuthProvider = ({ children }) => {
             return response;
         } catch (error) {
             console.error('Error logging in admin:', error);
-            throw error;
-        }
-    };
-
-    const handleRegisterProjectManager = async (userData) => {
-        try {
-            const response = await registerProjectManager(userData);
-            console.log('Project Manager registered:', response);
-            return response;
-        } catch (error) {
-            console.error('Error registering project manager:', error);
-            throw error;
-        }
-    };
-
-    const handleRegisterTeamMember = async (userData) => {
-        try {
-            const response = await registerTeamMember(userData);
-            console.log('Team member registered:', response);
-            return response;
-        } catch (error) {
-            console.error('Error registering team member:', error);
             throw error;
         }
     };
@@ -119,11 +119,11 @@ export const AuthProvider = ({ children }) => {
                 user,
                 loading,
                 registerAdmin: handleRegisterAdmin,
-                loginAdmin: handleLoginAdmin,
                 registerTeamMember: handleRegisterTeamMember,
+                registerProjectManager: handleRegisterProjectManager,
+                loginAdmin: handleLoginAdmin,
                 loginTeamMember: handleLoginTeamMember,
                 loginProjectManager: handleLoginProjectManager,
-                registerProjectManager: handleRegisterProjectManager,
                 logout: handleLogout,
             }}
         >

@@ -19,12 +19,58 @@ const AssignTeamMember = () => {
     };
 
     return (
-        <div>
-            <h2>Assign Team Member</h2>
-            <input type="text" value={assignProjectId} onChange={(e) => setAssignProjectId(e.target.value)} placeholder="Project ID" />
-            <input type="text" value={userId} onChange={(e) => setUserId(e.target.value)} placeholder="User ID" />
-            <input type="text" value={role} onChange={(e) => setRole(e.target.value)} placeholder="Role" />
-            <button onClick={handleAssignTeamMember}>Assign Team Member</button>
+        <div className="flex-1 p-10 border-l border-gray-200">
+            <h1 className="text-2xl font-bold mb-4">Assign Team Member</h1>
+            <form onSubmit={(e) => { e.preventDefault(); handleAssignTeamMember(); }}>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="assignProjectId">
+                        Project ID
+                    </label>
+                    <input
+                        type="text"
+                        name="assignProjectId"
+                        value={assignProjectId}
+                        onChange={(e) => setAssignProjectId(e.target.value)}
+                        placeholder="Project ID"
+                        required
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userId">
+                        User ID
+                    </label>
+                    <input
+                        type="text"
+                        name="userId"
+                        value={userId}
+                        onChange={(e) => setUserId(e.target.value)}
+                        placeholder="User ID"
+                        required
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="role">
+                        Role
+                    </label>
+                    <input
+                        type="text"
+                        name="role"
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                        placeholder="Role"
+                        required
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                </div>
+                <button
+                    type="submit"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                    Assign Team Member
+                </button>
+            </form>
         </div>
     );
 };

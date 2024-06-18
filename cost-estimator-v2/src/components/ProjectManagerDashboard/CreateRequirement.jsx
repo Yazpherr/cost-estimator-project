@@ -26,15 +26,100 @@ const CreateRequirement = () => {
     };
 
     return (
-        <div>
-            <h2>Create Requirement</h2>
-            <input type="text" value={reqProjectId} onChange={(e) => setReqProjectId(e.target.value)} placeholder="Project ID" />
-            <input type="text" value={requirementTitle} onChange={(e) => setRequirementTitle(e.target.value)} placeholder="Requirement Title" />
-            <input type="text" value={requirementDescription} onChange={(e) => setRequirementDescription(e.target.value)} placeholder="Requirement Description" />
-            <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Category" />
-            <input type="text" value={priority} onChange={(e) => setPriority(e.target.value)} placeholder="Priority" />
-            <input type="number" value={estimation} onChange={(e) => setEstimation(e.target.value)} placeholder="Estimation" />
-            <button onClick={handleCreateRequirement}>Create Requirement</button>
+        <div className="flex-1 p-10 border-l border-gray-200">
+            <h1 className="text-2xl font-bold mb-4">Create Requirement</h1>
+            <form onSubmit={(e) => { e.preventDefault(); handleCreateRequirement(); }}>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="reqProjectId">
+                        Project ID
+                    </label>
+                    <input
+                        type="text"
+                        name="reqProjectId"
+                        value={reqProjectId}
+                        onChange={(e) => setReqProjectId(e.target.value)}
+                        placeholder="Project ID"
+                        required
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="requirementTitle">
+                        Requirement Title
+                    </label>
+                    <input
+                        type="text"
+                        name="requirementTitle"
+                        value={requirementTitle}
+                        onChange={(e) => setRequirementTitle(e.target.value)}
+                        placeholder="Requirement Title"
+                        required
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="requirementDescription">
+                        Requirement Description
+                    </label>
+                    <input
+                        type="text"
+                        name="requirementDescription"
+                        value={requirementDescription}
+                        onChange={(e) => setRequirementDescription(e.target.value)}
+                        placeholder="Requirement Description"
+                        required
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="category">
+                        Category
+                    </label>
+                    <input
+                        type="text"
+                        name="category"
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        placeholder="Category"
+                        required
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="priority">
+                        Priority
+                    </label>
+                    <input
+                        type="text"
+                        name="priority"
+                        value={priority}
+                        onChange={(e) => setPriority(e.target.value)}
+                        placeholder="Priority"
+                        required
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="estimation">
+                        Estimation
+                    </label>
+                    <input
+                        type="number"
+                        name="estimation"
+                        value={estimation}
+                        onChange={(e) => setEstimation(e.target.value)}
+                        placeholder="Estimation"
+                        required
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                </div>
+                <button
+                    type="submit"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                    Create Requirement
+                </button>
+            </form>
         </div>
     );
 };

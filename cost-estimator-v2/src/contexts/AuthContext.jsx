@@ -13,8 +13,9 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
         if (token) {
-            setUser({ token });
+            setUser({ token, role });
         }
         setLoading(false);
     }, []);
@@ -34,7 +35,8 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await loginAdmin(userData);
             localStorage.setItem('token', response.access_token);
-            setUser({ token: response.access_token });
+            localStorage.setItem('role', response.user.role);
+            setUser({ token: response.access_token, role: response.user.role });
             navigate('/admin');
             console.log('Admin logged in:', response);
             return response;
@@ -70,7 +72,8 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await loginTeamMember(userData);
             localStorage.setItem('token', response.access_token);
-            setUser({ token: response.access_token });
+            localStorage.setItem('role', response.user.role);
+            setUser({ token: response.access_token, role: response.user.role });
             navigate('/protected');
             console.log('Team member logged in:', response);
             return response;
@@ -84,8 +87,9 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await loginProjectManager(userData);
             localStorage.setItem('token', response.access_token);
-            setUser({ token: response.access_token });
-            navigate('/protected');
+            localStorage.setItem('role', response.user.role);
+            setUser({ token: response.access_token, role: response.user.role });
+            navigate('/project-manager-dashboard');
             console.log('Project manager logged in:', response);
             return response;
         } catch (error) {
@@ -98,6 +102,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await logout();
             localStorage.removeItem('token');
+            localStorage.removeItem('role');
             setUser(null);
             navigate('/login');
             console.log('Logged out:', response);

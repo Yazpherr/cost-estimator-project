@@ -1,12 +1,11 @@
 import { Button, Form, Input } from "antd";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { NavBarSoloLogo } from "../components/navegation/NavBarSoloLogo";
 import { AlertError } from "../components/ui/AlertError";
 import { AlertGood } from "../components/ui/AlertGood";
-import { Footer } from "../components/ui/Footer";
 import { useAuthContext } from "../context/AuthContext";
 import { clearUrl } from "../helpers/clearUrl";
 import {
@@ -220,8 +219,6 @@ export const Login = () => {
           </div>
         </div>
 
-        {/* Footer */}
-        <Footer />
       </section>
     </>
   );

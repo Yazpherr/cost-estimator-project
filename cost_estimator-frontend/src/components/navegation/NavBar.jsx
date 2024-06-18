@@ -27,7 +27,7 @@ export const NavBar = () => {
             duration={500}
             className="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer"
           >
-            <img src="/img/cost_estimator.png" className="h-8" alt="logo-vortex" />
+            <img src="/speed-project-ico.svg" className="h-8" alt="logo-cost-estimator" />
           </LinkScroll>
           {/* Links pc */}
           <div className="items-center justify-between hidden w-full lg:flex lg:w-auto lg:order-1">

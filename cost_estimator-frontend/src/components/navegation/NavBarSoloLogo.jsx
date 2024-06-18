@@ -13,7 +13,7 @@ export const NavBarSoloLogo = ({Url}) => {
                     Volver</Link>
                 </div>
                 <Link to={HOME}  className="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="/img/cost_estimator-favicon.png" className="h-8" alt="logo-vortex" />
+                    <img src="/speed-project-ico.svg" className="h-8" alt="logo-cost-estitator" />
                 </Link>
                 <div className="w-[80px]">
                 </div>

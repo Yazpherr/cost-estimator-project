@@ -2,7 +2,6 @@ import { Button, Empty, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../axios/axiosInstance";
-import { Footer } from "../../components/ui/Footer";
 import { LoadingSeccion } from "../../components/ui/LoadingSeccion";
 import { AddIcon } from "../../components/ui/icons/AddIcon";
 import { ModalCUTienda } from "../../components/ui/modals/ModalCUTienda";
@@ -57,12 +56,12 @@ export const MisTiendas = () => {
   }
 
   const cambiarEstado = async (id) => {
-    message.loading("Cambiando estado de la tienda...");
+    message.loading("Cambiando estado de el proyecto...");
     await axiosInstance
       .put("/api/updateStatusTienda/" + id + "/" + userLogged.rut)
       .then((response) => {
         message.destroy();
-        message.success(`El estado de la tienda se ha cambiado correctamente.`);
+        message.success(`El estado de el proyect se ha cambiado correctamente.`);
         getShopIdUser();
       })
       .catch((error) => {
@@ -92,13 +91,13 @@ export const MisTiendas = () => {
       <div>
         <div className="flex justify-between gap-4 mb-12 flex-wrap items-center">
           <h2 className="sora-font text-3xl sm:text-4xl font-bold">
-            Mi tienda
+            Jefe de proyecto
           </h2>
           <div className="container-button-items-tienda flex w-full items-center gap-4 md:w-fit justify-end ">
             {isLoadingSeccion ? (
               <p className="text-plomo">Cargando...</p>
             ) : (
-              <p className="text-plomo">{countShop}/1 Tienda</p>
+              <p className="text-plomo">{countShop}/1 Proyecto</p>
             )}
             <Button
               disabled={disabledButtonCreateShop}
@@ -107,7 +106,7 @@ export const MisTiendas = () => {
               onClick={() => childRef.current.childFunction(null, "Agregar")}
             >
               <AddIcon className="size-5 flex" />
-              Agregar Tienda
+              Agregar Proyecto
             </Button>
           </div>
         </div>
@@ -121,7 +120,7 @@ export const MisTiendas = () => {
         {isLoadingSeccion ? (
           <LoadingSeccion />
         ) : data.length === 0 ? (
-          <Empty description="Actualmente no tienes tu tienda creada." />
+          <Empty description="Actualmente no tienes proyectos creados" />
         ) : (
           <div
             className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8`}
@@ -146,8 +145,6 @@ export const MisTiendas = () => {
         )}
       </div>
 
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };

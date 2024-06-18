@@ -115,7 +115,7 @@ let linkVendedor = [
 
 const linkSoloMisTiendas = [
   getItem(
-    <p className="title_menu_item">Mis tiendas</p>,
+    <p className="title_menu_item">Mis proyectos</p>,
     MISTIENDAS,
     //Icons
     <div className="contenedor_icon_menu_item">

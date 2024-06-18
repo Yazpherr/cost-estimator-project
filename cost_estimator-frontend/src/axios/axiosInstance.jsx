@@ -1,36 +1,29 @@
-import axios from "axios";
-import { LOGOUT } from "../routes/Paths";
+import axios from 'axios';
+import { LOGOUT } from '../routes/Paths';
 
-//LOCAL
-export const baseURL = "http://127.0.0.1:8000"; 
+// LOCAL
+const baseURL = 'http://127.0.0.1:8000/api/';
 
-//DEV
-/* export const baseURL = "https://apidevpos.vortexpos.com";  */
-
-//DEMO
-/* export const baseURL = "https://apidemov2.vortexone.cl"; */
-
-//PRODUCCION
-/* export const baseURL = "https://api.vortexone.cl"; */
-
+// Obtener el token de acceso desde localStorage
 async function getAccessToken() {
-  return localStorage.getItem("token");
+  return localStorage.getItem('token');
 }
 
-export const axiosInstance = axios.create({
+// Crear una instancia de axios con la configuración base
+const axiosInstance = axios.create({
   baseURL,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
-//añadir el token en cada peticion
+// Añadir el token en cada petición
 axiosInstance.interceptors.request.use(
   async (req) => {
     const access_token = await getAccessToken();
 
     if (access_token) {
-      req.headers["Authorization"] = "Bearer " + access_token;
+      req.headers['Authorization'] = 'Bearer ' + access_token;
     }
 
     return req;
@@ -40,27 +33,28 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-//Funcion que ejecuta algo cuando la respuesta de la api son las que estan dentro de los if
+// Manejar respuestas de la API
 axiosInstance.interceptors.response.use(
   (response) => {
     if (
-      response.data.message === "Token expirado" ||
-      response.data.message === "Token inválido" ||
-      response.data.message === "Token no encontrado"
+      response.data.message === 'Token expirado' ||
+      response.data.message === 'Token inválido' ||
+      response.data.message === 'Token no encontrado'
     ) {
       window.location.href = LOGOUT;
     }
     return response;
   },
-  async (error) => {
+  (error) => {
     if (
-      error.response.data.message === "Token expirado" ||
-      error.response.data.message === "Token inválido" ||
-      error.response.data.message === "Token inválido"
+      error.response.data.message === 'Token expirado' ||
+      error.response.data.message === 'Token inválido' ||
+      error.response.data.message === 'Token no encontrado'
     ) {
       window.location.href = LOGOUT;
-    } else {
     }
     return Promise.reject(error);
   }
 );
+
+export default axiosInstance; // Exportar por defecto

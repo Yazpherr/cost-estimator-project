@@ -35,7 +35,7 @@ const Navbar = () => {
             <a href="#reviews" className="text-gray-800 hover:text-purple-600">Reviews</a>
             <a href="#pricing" className="text-gray-800 hover:text-purple-600">Pricing</a>
             <a href="#login" className="text-gray-800 hover:text-purple-600">Login</a>
-            <a href="#get-started" className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-300">Get Started</a>
+            <a href="#get-started" className="bg-primaryBlue text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-300">Get Started</a>
           </div>
           <div className="md:hidden flex items-center">
             <button onClick={toggleMenu} className="text-gray-800 focus:outline-none">

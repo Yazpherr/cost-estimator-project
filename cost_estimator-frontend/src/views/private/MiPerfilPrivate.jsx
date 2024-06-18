@@ -75,7 +75,7 @@ export const MiPerfilPrivate = () => {
 
                   {/* img */}
                   <div className="w-full flex justify-center mt-4">
-                    <div className="bg-primary flex justify-center items-center w-full h-[140px] sm:h-[200px] max-w-[140px] sm:max-w-[200px] rounded-full">
+                    <div className="bg-primaryBlue flex justify-center items-center w-full h-[140px] sm:h-[200px] max-w-[140px] sm:max-w-[200px] rounded-full">
                       <p className="text-white text-8xl">
                         {data.name && data.name[0]}
                       </p>
@@ -168,8 +168,6 @@ export const MiPerfilPrivate = () => {
                 </div>
               </div>
             </div>
-            {/* Footer */}
-            <Footer />
           </div>
         )}
       </section>

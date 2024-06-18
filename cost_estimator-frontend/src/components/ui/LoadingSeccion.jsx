@@ -9,10 +9,10 @@ export const LoadingSeccion = () => {
        flex-col items-center"
       >
         <div className="flex flex-col justify-center items-center" role="status">
-          <img src="/img/LogoVortex4.png" width={180} alt="logo-vortex"/>
+          <img src="/speed-project-ico.svg" width={50} alt="logo-vortex"/>
           <svg
             aria-hidden="true"
-            className="w-12 h-12 text-gray-200 animate-spin fill-primary"
+            className="w-12 h-12 text-gray-200 animate-spin fill-primaryBlue"
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

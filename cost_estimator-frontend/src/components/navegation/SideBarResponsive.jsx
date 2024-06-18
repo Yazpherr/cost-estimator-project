@@ -58,7 +58,7 @@ export const SideBarResponsive = ({
         </button>
         {/* Logo */}
         <div className="flex items-center ">
-          <img width={100} src="/img/LogoVortex4.png" alt="logo-vortex" />
+          <img width={25} src="/speed-project-ico.svg" alt="logo-cost-estimator" />
         </div>
 
         {/* Number box y Uer data */}

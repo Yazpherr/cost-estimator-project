@@ -16,12 +16,21 @@ const ProjectManagerDashboard = () => {
     const [resources, setResources] = useState('');
 
     // Estados para crear un requerimiento
-    const [projectId, setProjectId] = useState('');
+    const [reqProjectId, setReqProjectId] = useState('');
     const [requirementTitle, setRequirementTitle] = useState('');
     const [requirementDescription, setRequirementDescription] = useState('');
     const [category, setCategory] = useState('');
     const [priority, setPriority] = useState('');
     const [estimation, setEstimation] = useState('');
+
+    // Estados para asignar un miembro del equipo
+    const [assignProjectId, setAssignProjectId] = useState('');
+    const [userId, setUserId] = useState('');
+    const [role, setRole] = useState('');
+
+    // Estados para eliminar un miembro del equipo
+    const [removeProjectId, setRemoveProjectId] = useState('');
+    const [removeUserId, setRemoveUserId] = useState('');
 
     // Función para manejar la creación de proyectos
     const handleCreateProject = async () => {
@@ -44,7 +53,7 @@ const ProjectManagerDashboard = () => {
     const handleCreateRequirement = async () => {
         try {
             const response = await api.post('/create-requirement', {
-                project_id: projectId,
+                project_id: reqProjectId,
                 title: requirementTitle,
                 description: requirementDescription,
                 category: category,
@@ -54,6 +63,29 @@ const ProjectManagerDashboard = () => {
             alert('Requerimiento creado exitosamente');
         } catch (error) {
             console.error('Error creando el requerimiento:', error);
+        }
+    };
+
+    // Función para manejar la asignación de miembros del equipo
+    const handleAssignTeamMember = async () => {
+        try {
+            const response = await api.post(`/projects/${assignProjectId}/assign-team-member`, {
+                user_id: userId,
+                role: role,
+            });
+            alert('Miembro del equipo asignado exitosamente');
+        } catch (error) {
+            console.error('Error asignando el miembro del equipo:', error);
+        }
+    };
+
+    // Función para manejar la eliminación de miembros del equipo
+    const handleRemoveTeamMember = async () => {
+        try {
+            const response = await api.delete(`/projects/${removeProjectId}/remove-team-member/${removeUserId}`);
+            alert('Miembro del equipo removido exitosamente');
+        } catch (error) {
+            console.error('Error removiendo el miembro del equipo:', error);
         }
     };
 
@@ -70,7 +102,7 @@ const ProjectManagerDashboard = () => {
         <div>
             <h1>Project Manager Dashboard</h1>
             <button onClick={handleLogout}>Logout</button>
-            
+
             <h2>Create Project</h2>
             <input type="text" value={projectName} onChange={(e) => setProjectName(e.target.value)} placeholder="Project Name" />
             <input type="text" value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} placeholder="Project Description" />
@@ -79,15 +111,26 @@ const ProjectManagerDashboard = () => {
             <input type="number" value={budget} onChange={(e) => setBudget(e.target.value)} placeholder="Budget" />
             <input type="text" value={resources} onChange={(e) => setResources(e.target.value)} placeholder="Resources" />
             <button onClick={handleCreateProject}>Create Project</button>
-            
+
             <h2>Create Requirement</h2>
-            <input type="text" value={projectId} onChange={(e) => setProjectId(e.target.value)} placeholder="Project ID" />
+            <input type="text" value={reqProjectId} onChange={(e) => setReqProjectId(e.target.value)} placeholder="Project ID" />
             <input type="text" value={requirementTitle} onChange={(e) => setRequirementTitle(e.target.value)} placeholder="Requirement Title" />
             <input type="text" value={requirementDescription} onChange={(e) => setRequirementDescription(e.target.value)} placeholder="Requirement Description" />
             <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Category" />
             <input type="text" value={priority} onChange={(e) => setPriority(e.target.value)} placeholder="Priority" />
             <input type="number" value={estimation} onChange={(e) => setEstimation(e.target.value)} placeholder="Estimation" />
             <button onClick={handleCreateRequirement}>Create Requirement</button>
+
+            <h2>Assign Team Member</h2>
+            <input type="text" value={assignProjectId} onChange={(e) => setAssignProjectId(e.target.value)} placeholder="Project ID" />
+            <input type="text" value={userId} onChange={(e) => setUserId(e.target.value)} placeholder="User ID" />
+            <input type="text" value={role} onChange={(e) => setRole(e.target.value)} placeholder="Role" />
+            <button onClick={handleAssignTeamMember}>Assign Team Member</button>
+
+            <h2>Remove Team Member</h2>
+            <input type="text" value={removeProjectId} onChange={(e) => setRemoveProjectId(e.target.value)} placeholder="Project ID" />
+            <input type="text" value={removeUserId} onChange={(e) => setRemoveUserId(e.target.value)} placeholder="User ID" />
+            <button onClick={handleRemoveTeamMember}>Remove Team Member</button>
         </div>
     );
 };

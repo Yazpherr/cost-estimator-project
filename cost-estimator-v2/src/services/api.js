@@ -85,6 +85,26 @@ export const loginTeamMember = async (userData) => {
     }
 };
 
+export const assignTeamMember = async (projectId, userData) => {
+    try {
+        const response = await api.post(`/projects/${projectId}/assign-team-member`, userData);
+        return response.data;
+    } catch (error) {
+        console.error('Error assigning team member:', error.response.data);
+        throw error;
+    }
+};
+
+export const removeTeamMember = async (projectId, userId) => {
+    try {
+        const response = await api.delete(`/projects/${projectId}/remove-team-member/${userId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error removing team member:', error.response.data);
+        throw error;
+    }
+};
+
 export const logout = async () => {
     try {
         const response = await api.post('/logout');

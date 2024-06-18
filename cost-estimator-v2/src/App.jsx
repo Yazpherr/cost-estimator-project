@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -5,6 +6,7 @@ import Protected from './pages/Protected';
 import Logout from './pages/Logout';
 import Patient from './pages/Patient';
 import AdminPanel from './pages/AdminPanel';
+import ProjectManagerDashboard from './pages/ProjectManagerDashboard';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -19,6 +21,7 @@ const App = () => {
                     <Route path="/logout" element={<Logout />} />
                     <Route path="/patient" element={<ProtectedRoute><Patient /></ProtectedRoute>} />
                     <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
+                    <Route path="/project-manager-dashboard" element={<ProtectedRoute><ProjectManagerDashboard /></ProtectedRoute>} />
                 </Routes>
             </AuthProvider>
         </Router>

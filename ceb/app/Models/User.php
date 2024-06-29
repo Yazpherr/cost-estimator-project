@@ -86,4 +86,20 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->role === 'team-member';
     }
+
+    /**
+     * Relación con la tabla project_owners
+     */
+    public function projectOwner()
+    {
+        return $this->hasOne(ProjectOwner::class, 'user_id');
+    }
+
+    /**
+     * Relación con la tabla team_members
+     */
+    public function teamMember()
+    {
+        return $this->hasOne(TeamMember::class, 'user_id');
+    }
 }

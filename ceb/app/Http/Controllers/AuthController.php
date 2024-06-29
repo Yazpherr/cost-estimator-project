@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+// importacion de modelos
 use App\Models\User;
+use App\Models\TeamMember;
+use App\Models\ProjectOwner;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -12,7 +16,7 @@ class AuthController extends Controller
 {
     /**
      * Registro de un nuevo usuario
-     */
+    //  */
     public function register(Request $request)
     {
         // Validar los datos de entrada
@@ -35,6 +39,9 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
                 'role' => 'team-member', // Asignar el rol 'team-member' automáticamente
             ]);
+
+            // Crear el registro en la tabla team_members
+            TeamMember::create(['user_id' => $user->id]);
 
             // Generar un token JWT para el usuario
             $token = JWTAuth::fromUser($user);
@@ -80,6 +87,9 @@ class AuthController extends Controller
                 'role' => 'project-owner',
             ]);
 
+            // Crear el registro en la tabla project_owners
+            ProjectOwner::create(['user_id' => $user->id]);
+
             // Devolver el usuario creado
             return response()->json($user, 201);
 
@@ -88,6 +98,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'No se pudo registrar el product-owner', 'details' => $e->getMessage()], 500);
         }
     }
+
 
     /**
      * Inicio de sesión de un usuario

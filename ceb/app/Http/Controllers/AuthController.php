@@ -5,144 +5,144 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
     /**
-     * Registro de administrador
+     * Registro de un nuevo usuario
      */
-    public function registerAdmin(Request $request)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-            'role' => 'admin',
-        ]);
-
-        $user->assignRole('admin');
-
-        return response()->json(['message' => 'Admin registrado exitosamente']);
-    }
-
-    /**
-     * Inicio de sesión de administrador
-     */
-    public function loginAdmin(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
-
-        if (!$token = Auth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return $this->createNewToken($token);
-    }
-
-    /**
-     * Registro de miembros del equipo
-     */
-    public function registerTeamMember(Request $request)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-            'role' => 'team-member',
-        ]);
-
-        $user->assignRole('team-member');
-
-        return response()->json(['message' => 'Miembro del equipo registrado exitosamente']);
-    }
-
-    /**
-     * Inicio de sesión de miembro del equipo
-     */
-    public function loginTeamMember(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
-
-        if (!$token = Auth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return $this->createNewToken($token);
-    }
-
-    /**
-     * Registro de jefes de proyecto (antes doctores) por el administrador
-     */
-    public function registerProjectManager(Request $request)
+    public function register(Request $request)
     {
         // Validar los datos de entrada
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:6|confirmed',
+            'role' => 'required|string|in:team-member', // Los usuarios solo pueden registrarse como 'team-member'
         ]);
 
-        // Crear el usuario con rol de jefe de proyecto
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-            'role' => 'project-manager',
-        ]);
-
-        $user->assignRole('project-manager');
-
-        // Retornar la respuesta
-        return response()->json(['message' => 'Jefe de proyecto registrado exitosamente']);
-    }
-
-    /**
-     * Inicio de sesión de jefe de proyecto
-     */
-    public function loginProjectManager(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
-
-        if (!$token = Auth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        // Devolver errores de validación si los hay
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
         }
 
-        return $this->createNewToken($token);
+        try {
+            // Crear el usuario
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'team-member',
+            ]);
+
+            // Generar un token JWT para el usuario
+            $token = JWTAuth::fromUser($user);
+
+            // Devolver el usuario y el token
+            return response()->json(compact('user', 'token'), 201);
+
+        } catch (\Exception $e) {
+            // Manejar cualquier error inesperado
+            return response()->json(['error' => 'No se pudo registrar el usuario', 'details' => $e->getMessage()], 500);
+        }
     }
 
     /**
-     * Cerrar sesión
+     * Registro de un nuevo product-owner por el admin
+     */
+    public function registerProductOwner(Request $request)
+    {
+        // Verificar si el usuario tiene el rol de admin
+        if (auth()->user()->role !== 'admin') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Validar los datos de entrada
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+            'role' => 'required|string|in:product-owner'
+        ]);
+
+        // Devolver errores de validación si los hay
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        try {
+            // Crear el product-owner
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'product-owner',
+            ]);
+
+            // Devolver el usuario creado
+            return response()->json($user, 201);
+
+        } catch (\Exception $e) {
+            // Manejar cualquier error inesperado
+            return response()->json(['error' => 'No se pudo registrar el product-owner', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Inicio de sesión de un usuario
+     */
+    public function login(Request $request)
+    {
+        // Obtener las credenciales del request
+        $credentials = $request->only('email', 'password');
+
+        // Intentar autenticar al usuario y generar un token
+        try {
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
+            // Devolver el token
+            return response()->json(compact('token'));
+
+        } catch (\Exception $e) {
+            // Manejar cualquier error inesperado
+            return response()->json(['error' => 'No se pudo iniciar sesión', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Cierre de sesión de un usuario
      */
     public function logout()
     {
-        Auth::logout();
-        return response()->json(['message' => 'Sesión cerrada correctamente']);
+        try {
+            // Invalidar el token
+            JWTAuth::invalidate(JWTAuth::getToken());
+
+            // Devolver mensaje de éxito
+            return response()->json(['message' => 'Successfully logged out']);
+
+        } catch (\Exception $e) {
+            // Manejar cualquier error inesperado
+            return response()->json(['error' => 'No se pudo cerrar sesión', 'details' => $e->getMessage()], 500);
+        }
     }
 
     /**
-     * Crear nuevo token
+     * Obtener el usuario autenticado
      */
-    protected function createNewToken($token)
+    public function user()
     {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => Auth::factory()->getTTL() * 60,
-            'user' => Auth::user()
-        ]);
+        try {
+            // Devolver el usuario autenticado
+            return response()->json(auth()->user());
+
+        } catch (\Exception $e) {
+            // Manejar cualquier error inesperado
+            return response()->json(['error' => 'No se pudo obtener el usuario', 'details' => $e->getMessage()], 500);
+        }
     }
 }

@@ -4,15 +4,12 @@ namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
-use Spatie\Permission\Middlewares\RoleMiddleware;
-use Spatie\Permission\Middlewares\PermissionMiddleware;
-use Spatie\Permission\Middlewares\RoleOrPermissionMiddleware;
 class Kernel extends HttpKernel
 {
     /**
-     * El stack de middleware HTTP global de la aplicación.
+     * The application's global HTTP middleware stack.
      *
-     * Estos middleware se ejecutan durante cada solicitud a tu aplicación.
+     * These middleware are run during every request to your application.
      *
      * @var array<int, class-string|string>
      */
@@ -27,7 +24,7 @@ class Kernel extends HttpKernel
     ];
 
     /**
-     * Los grupos de middleware de rutas de la aplicación.
+     * The application's route middleware groups.
      *
      * @var array<string, array<int, class-string|string>>
      */
@@ -49,10 +46,9 @@ class Kernel extends HttpKernel
     ];
 
     /**
-     * Los alias de middleware de la aplicación.
+     * The application's middleware aliases.
      *
-     * Los alias pueden ser utilizados en lugar de nombres de clases para asignar
-     * convenientemente middleware a rutas y grupos.
+     * Aliases may be used instead of class names to conveniently assign middleware to routes and groups.
      *
      * @var array<string, class-string|string>
      */
@@ -68,29 +64,5 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
-        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
-        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
     ];
-
-    /**
-     * Prioridad del middleware.
-     *
-     * Asegura que el middleware de roles se ejecute antes que otros.
-     *
-     * @var array<int, class-string|string>
-     */
-    protected $middlewarePriority = [
-        \Spatie\Permission\Middlewares\RoleMiddleware::class,
-        \Spatie\Permission\Middlewares\PermissionMiddleware::class,
-        \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        // otros middleware...
-    ];
-
-        protected $routeMiddleware = [
-            // otros middlewares
-            'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
-            'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
-        ];
-
 }

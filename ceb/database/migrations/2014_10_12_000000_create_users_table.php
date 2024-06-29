@@ -1,16 +1,13 @@
 <?php
 
-// 2014_10_12_000000_create_users_table.php
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+return new class extends Migration
 {
     /**
-     * Ejecutar las migraciones.
-     *
-     * @return void
+     * Run the migrations.
      */
     public function up()
     {
@@ -18,19 +15,19 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'project-manager', 'team-member']); // Actualiza los roles aquí
+            $table->string('role')->default('team-member'); // Añadir campo de rol
+            $table->rememberToken();
             $table->timestamps();
         });
     }
 
     /**
-     * Revertir las migraciones.
-     *
-     * @return void
+     * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('users');
     }
-}
+};

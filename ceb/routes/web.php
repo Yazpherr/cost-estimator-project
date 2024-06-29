@@ -16,7 +16,3 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/generate-error', function () {
-    throw new Exception('Testing error logging!');
-});

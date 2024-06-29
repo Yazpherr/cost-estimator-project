@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Ejecutar las migraciones.
      */
     public function up()
     {
@@ -17,14 +17,14 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('role')->default('team-member'); // Añadir campo de rol
+            $table->string('role')->default('team-member'); // Añadir campo de rol con valor predeterminado
             $table->rememberToken();
             $table->timestamps();
         });
     }
 
     /**
-     * Reverse the migrations.
+     * Revertir las migraciones.
      */
     public function down(): void
     {

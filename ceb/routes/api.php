@@ -19,17 +19,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('user', [AuthController::class, 'user']);
 
     // Ruta para registrar un product-owner (solo admin)
-    Route::post('register-product-owner', [AuthController::class, 'registerProductOwner'])->middleware('role:admin');
+    Route::post('register-product-owner', [AuthController::class, 'registerProductOwner']);
 
-    // Rutas protegidas por roles
-    Route::middleware(['auth:api'])->group(function () {
-        // Rutas para administradores
-        Route::post('admin/task', [AdminController::class, 'createTask'])->middleware('role:admin');
-
-        // Rutas para product-owners
-        Route::post('project/task', [ProjectManagerController::class, 'createTask'])->middleware('role:product-owner');
-
-        // Rutas para miembros del equipo
-        Route::get('tasks', [TeamMemberController::class, 'listTasks'])->middleware('role:team-member');
-    });
+    // Rutas protegidas por roles verificadas en los controladores
+    Route::post('admin/task', [AdminController::class, 'createTask']);
+    Route::post('project/task', [ProjectManagerController::class, 'createTask']);
+    Route::get('tasks', [TeamMemberController::class, 'listTasks']);
 });

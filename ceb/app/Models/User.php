@@ -11,7 +11,7 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * Los atributos que se pueden asignar masivamente.
      *
      * @var array
      */
@@ -20,7 +20,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * Los atributos que deben estar ocultos para los arrays.
      *
      * @var array
      */
@@ -29,7 +29,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * Los atributos que deben ser convertidos a tipos nativos.
      *
      * @var array
      */
@@ -38,7 +38,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
+     * Obtener el identificador que se almacenará en el claim de sujeto del JWT.
      *
      * @return mixed
      */
@@ -48,7 +48,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
+     * Devolver una clave de valor, que contiene cualquier claim personalizado que se añadirá al JWT.
      *
      * @return array
      */
@@ -58,7 +58,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Check if the user has admin role.
+     * Verificar si el usuario tiene el rol de admin.
      *
      * @return bool
      */
@@ -68,17 +68,17 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Check if the user has project manager role.
+     * Verificar si el usuario tiene el rol de product owner.
      *
      * @return bool
      */
-    public function isProjectManager()
+    public function isProductOwner()
     {
         return $this->role === 'project-owner';
     }
 
     /**
-     * Check if the user has team member role.
+     * Verificar si el usuario tiene el rol de team member.
      *
      * @return bool
      */

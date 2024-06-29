@@ -20,7 +20,6 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|string|in:team-member', // Los usuarios solo pueden registrarse como 'team-member'
         ]);
 
         // Devolver errores de validación si los hay
@@ -34,7 +33,7 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'role' => 'team-member',
+                'role' => 'team-member', // Asignar el rol 'team-member' automáticamente
             ]);
 
             // Generar un token JWT para el usuario
@@ -48,6 +47,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'No se pudo registrar el usuario', 'details' => $e->getMessage()], 500);
         }
     }
+
 
     /**
      * Registro de un nuevo product-owner por el admin
@@ -64,7 +64,6 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|string|in:product-owner'
         ]);
 
         // Devolver errores de validación si los hay
@@ -78,7 +77,7 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'role' => 'product-owner',
+                'role' => 'project-owner',
             ]);
 
             // Devolver el usuario creado

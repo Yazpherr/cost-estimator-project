@@ -61,24 +61,24 @@ class AuthController extends Controller
      */
     public function registerProductOwner(Request $request)
     {
-        // Verificar si el usuario tiene el rol de admin
-        if (auth()->user()->role !== 'admin') {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-
-        // Validar los datos de entrada
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-
-        // Devolver errores de validación si los hay
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-
         try {
+            // Verificar si el usuario tiene el rol de admin
+            if (auth()->user()->role !== 'admin') {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            // Validar los datos de entrada
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:6|confirmed',
+            ]);
+
+            // Devolver errores de validación si los hay
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
             // Crear el product-owner
             $user = User::create([
                 'name' => $request->name,
@@ -93,11 +93,18 @@ class AuthController extends Controller
             // Devolver el usuario creado
             return response()->json($user, 201);
 
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Manejar errores de base de datos
+            return response()->json(['error' => 'Error de base de datos', 'details' => $e->getMessage()], 500);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Manejar errores de validación
+            return response()->json(['error' => 'Error de validación', 'details' => $e->errors()], 422);
         } catch (\Exception $e) {
-            // Manejar cualquier error inesperado
+            // Manejar cualquier otro error inesperado
             return response()->json(['error' => 'No se pudo registrar el product-owner', 'details' => $e->getMessage()], 500);
         }
     }
+
 
 
     /**
@@ -105,22 +112,22 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        // Obtener las credenciales del request
         $credentials = $request->only('email', 'password');
 
-        // Intentar autenticar al usuario y generar un token
-        try {
-            if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'Unauthorized'], 401);
-            }
-
-            // Devolver el token
-            return response()->json(compact('token'));
-
-        } catch (\Exception $e) {
-            // Manejar cualquier error inesperado
-            return response()->json(['error' => 'No se pudo iniciar sesión', 'details' => $e->getMessage()], 500);
+        if (!$token = JWTAuth::attempt($credentials)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
+
+        $user = auth()->user();
+        return response()->json([
+            'token' => $token,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role
+            ]
+        ]);
     }
 
     /**

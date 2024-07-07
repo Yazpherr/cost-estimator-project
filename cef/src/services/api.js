@@ -1,9 +1,8 @@
-// src/services/api.js
-
 import axios from 'axios';
 
 const API_URL = 'http://127.0.0.1:8000/api';
 
+// Configurar una instancia de Axios
 const api = axios.create({
     baseURL: API_URL,
     headers: {
@@ -11,12 +10,12 @@ const api = axios.create({
     },
 });
 
-// Añadir un interceptor para incluir el token en las solicitudes
+// Interceptor para añadir el token de autorización a cada solicitud
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
         if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
+            config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
     },
@@ -25,94 +24,24 @@ api.interceptors.request.use(
     }
 );
 
-export const registerAdmin = async (userData) => {
-    try {
-        const response = await api.post('/register-admin', userData);
-        return response.data;
-    } catch (error) {
-        console.error('Error registering admin:', error.response.data);
-        throw error;
-    }
+// Método para registrar un nuevo usuario (team-member)
+export const registerUser = (userData) => {
+    return api.post('/register', userData);
 };
 
-export const loginAdmin = async (userData) => {
-    try {
-        const response = await api.post('/login-admin', userData);
-        return response.data;
-    } catch (error) {
-        console.error('Error logging in admin:', error.response.data);
-        throw error;
-    }
+// Método para iniciar sesión
+export const loginUser = (loginData) => {
+    return api.post('/login', loginData);
 };
 
-export const registerProjectManager = async (userData) => {
-    try {
-        const response = await api.post('/register-project-manager', userData);
-        return response.data;
-    } catch (error) {
-        console.error('Error registering project manager:', error.response.data);
-        throw error;
-    }
+// Método para cerrar sesión
+export const logoutUser = () => {
+    return api.post('/logout');
 };
 
-export const loginProjectManager = async (userData) => {
-    try {
-        const response = await api.post('/login-project-manager', userData);
-        return response.data;
-    } catch (error) {
-        console.error('Error logging in project manager:', error.response.data);
-        throw error;
-    }
-};
-
-export const registerTeamMember = async (userData) => {
-    try {
-        const response = await api.post('/register-team-member', userData);
-        return response.data;
-    } catch (error) {
-        console.error('Error registering team member:', error.response.data);
-        throw error;
-    }
-};
-
-export const loginTeamMember = async (userData) => {
-    try {
-        const response = await api.post('/login-team-member', userData);
-        return response.data;
-    } catch (error) {
-        console.error('Error logging in team member:', error.response.data);
-        throw error;
-    }
-};
-
-export const assignTeamMember = async (projectId, userData) => {
-    try {
-        const response = await api.post(`/projects/${projectId}/assign-team-member`, userData);
-        return response.data;
-    } catch (error) {
-        console.error('Error assigning team member:', error.response.data);
-        throw error;
-    }
-};
-
-export const removeTeamMember = async (projectId, userId) => {
-    try {
-        const response = await api.delete(`/projects/${projectId}/remove-team-member/${userId}`);
-        return response.data;
-    } catch (error) {
-        console.error('Error removing team member:', error.response.data);
-        throw error;
-    }
-};
-
-export const logout = async () => {
-    try {
-        const response = await api.post('/logout');
-        return response.data;
-    } catch (error) {
-        console.error('Error logging out:', error.response.data);
-        throw error;
-    }
+// Método para obtener el usuario autenticado
+export const getAuthenticatedUser = () => {
+    return api.get('/user');
 };
 
 export default api;

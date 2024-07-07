@@ -12,7 +12,7 @@ class ProjectManagerController extends Controller
     public function createTask(Request $request)
     {
         // Verificar si el usuario tiene el rol de project-manager
-        if (auth()->user()->role !== 'project-manager') {
+        if (auth()->user()->role !== 'project-owner') {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 

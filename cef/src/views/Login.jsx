@@ -1,21 +1,19 @@
-import  { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import { AuthContext } from '../contexts/AuthContext';
 import NavBarSoloLogo from '../components/NavBarSoloLogo';
-import RoleSwitch from '../components/RoleSwitch';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loginAdmin, loginProjectManager, loginTeamMember } = useContext(AuthContext);
+  const { loginUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [isLoadingButton, setIsLoadingButton] = useState(false);
   const [visibleAlertError, setVisibleAlertError] = useState(false);
   const [tituloAlerta, setTituloAlerta] = useState('');
   const [descripcionAlerta, setDescripcionAlerta] = useState('');
-  const [selectedRole, setSelectedRole] = useState('Admin');
 
   const handleLogin = async () => {
     setVisibleAlertError(false);
@@ -23,14 +21,19 @@ const Login = () => {
 
     setIsLoadingButton(true);
     try {
-      if (selectedRole === 'Admin') {
-        await loginAdmin(formData);
-      } else if (selectedRole === 'Project Manager') {
-        await loginProjectManager(formData);
+      const response = await loginUser(formData);
+      if (response.data && response.data.user && response.data.user.role) {
+        const role = response.data.user.role;
+        if (role === 'admin') {
+          navigate('/admin');
+        } else if (role === 'project-owner') {
+          navigate('/project-manager-dashboard');
+        } else if (role === 'team-member') {
+          navigate('/team-member');
+        }
       } else {
-        await loginTeamMember(formData);
+        throw new Error('Invalid response structure');
       }
-      navigate('/project-manager-dashboard'); // Cambiar esta ruta según el rol y lógica de navegación
     } catch (error) {
       console.error('Error logging in:', error);
       setVisibleAlertError(true);
@@ -54,8 +57,6 @@ const Login = () => {
             </h2>
             <p className="text-gray-600 text-base md:text-lg mt-8">Ingresa tus datos para acceder</p>
           </div>
-
-          <RoleSwitch roles={['Admin', 'Project Manager', 'Team Member']} selectedRole={selectedRole} setSelectedRole={setSelectedRole} />
 
           {/* Formulario */}
           <Form

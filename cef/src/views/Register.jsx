@@ -1,32 +1,33 @@
-import  { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import NavBarSoloLogo from '../components/NavBarSoloLogo';
-import RoleSwitch from '../components/RoleSwitch';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const { registerAdmin, registerTeamMember } = useContext(AuthContext);
+  const { registerUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState('Admin');
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
     try {
-      if (selectedRole === 'Admin') {
-        await registerAdmin({ name, email, password, password_confirmation: passwordConfirmation });
-      } else {
-        await registerTeamMember({ name, email, password, password_confirmation: passwordConfirmation });
-      }
-      alert('Registration successful!');
+      await registerUser({
+        name,
+        email,
+        password,
+        password_confirmation: passwordConfirmation,
+      });
+      alert('Registro exitoso!');
       setName('');
       setEmail('');
       setPassword('');
       setPasswordConfirmation('');
+      navigate('/login'); // Redirigir al inicio de sesión después del registro
     } catch (error) {
-      console.error('Error registering:', error);
+      console.error('Error al registrar:', error);
     }
   };
 
@@ -44,8 +45,6 @@ const Register = () => {
             </h2>
             <p className="text-gray-600 text-base md:text-lg mt-8">Ingresa tus datos para registrarte</p>
           </div>
-
-          <RoleSwitch roles={['Admin', 'Team Member']} selectedRole={selectedRole} setSelectedRole={setSelectedRole} />
 
           {/* Formulario */}
           <form onSubmit={handleRegister} className="space-y-6 mt-4">

@@ -20,7 +20,7 @@ return new class extends Migration {
     public function down() {
         try {
             Schema::table('projects', function (Blueprint $table) {
-                $table->dropForeign(['project_owner_id']);
+                $table->dropForeign(['product_owner_id']);
             });
         } catch (Exception $e) {
             Log::error('Error dropping foreign keys from projects table: ' . $e->getMessage());

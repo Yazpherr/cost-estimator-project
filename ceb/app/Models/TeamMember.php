@@ -13,10 +13,16 @@ class TeamMember extends Model
 
     protected $fillable = [
         'user_id',
+        'profession_id',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function profession()
+    {
+        return $this->belongsTo(Profession::class, 'profession_id');
     }
 }

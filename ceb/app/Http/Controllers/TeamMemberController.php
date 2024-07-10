@@ -11,32 +11,35 @@ use Illuminate\Support\Facades\Validator;
 
 class TeamMemberController extends Controller
 {
-    // Solo permitir acceso a project owners
     public function __construct()
     {
-        $this->middleware(function ($request, $next) {
-            if (Auth::user() && Auth::user()->role === 'project-owner') {
-                return $next($request);
-            }
-            return response()->json(['message' => 'Unauthorized'], 403);
-        });
+        $this->middleware('auth:api');
     }
 
+    // Crear un nuevo miembro del equipo
     public function store(Request $request)
     {
+        // Verificar si el usuario autenticado es product owner
+        $user = Auth::user();
+        if ($user->role !== 'product-owner') {
+            return response()->json(['error' => 'Unauthorized', 'details' => 'Only product owners can create team members'], 403);
+        }
+
+        // Validar los datos de entrada
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'profession_id' => 'required|exists:professions,id_prof',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => 'Validation Error', 'details' => $validator->errors()], 400);
+            return response()->json(['error' => 'Validation Error', 'details' => $validator->errors()], 422);
         }
 
         try {
             // Crear el usuario
-            $user = User::create([
+            $newUser = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -45,8 +48,8 @@ class TeamMemberController extends Controller
 
             // Crear el registro en la tabla team_members
             $teamMember = TeamMember::create([
-                'user_id' => $user->id,
-                // No definimos profession_id aquí
+                'user_id' => $newUser->id,
+                'profession_id' => $request->profession_id,
             ]);
 
             return response()->json($teamMember, 201);
@@ -60,11 +63,11 @@ class TeamMemberController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'profession_id' => 'required|exists:professions,id',
+            'profession_id' => 'required|exists:professions,id_prof',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => 'Validation Error', 'details' => $validator->errors()], 400);
+            return response()->json(['error' => 'Validation Error', 'details' => $validator->errors()], 422);
         }
 
         try {

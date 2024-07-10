@@ -9,31 +9,32 @@ use Illuminate\Support\Facades\Validator;
 
 class ProjectMemberController extends Controller
 {
-    // Solo permitir acceso a project owners
     public function __construct()
     {
-        $this->middleware(function ($request, $next) {
-            if (Auth::user() && Auth::user()->role === 'project-owner') {
-                return $next($request);
-            }
-            return response()->json(['message' => 'Unauthorized'], 403);
-        });
+        $this->middleware('auth:api');
     }
 
     public function store(Request $request)
     {
+        // Verificar si el usuario autenticado es product owner
+        $user = Auth::user();
+        if ($user->role !== 'product-owner') {
+            return response()->json(['error' => 'Unauthorized', 'details' => 'Only product owners can assign team members to projects'], 403);
+        }
+
+        // Validar los datos de entrada
         $validator = Validator::make($request->all(), [
-            'project_code' => 'required|exists:projects,project_code',
+            'project_id' => 'required|exists:projects,id_pro',
             'team_member_id' => 'required|exists:team_members,id_tm',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => 'Validation Error', 'details' => $validator->errors()], 400);
+            return response()->json(['error' => 'Validation Error', 'details' => $validator->errors()], 422);
         }
 
         try {
             $projectMember = ProjectMember::create([
-                'project_code' => $request->project_code,
+                'project_id' => $request->project_id,
                 'team_member_id' => $request->team_member_id,
             ]);
 
@@ -42,18 +43,21 @@ class ProjectMemberController extends Controller
             return response()->json(['error' => 'No se pudo asignar el miembro al proyecto', 'details' => $e->getMessage()], 500);
         }
     }
-
-    public function destroy($id)
+    public function destroy($id_pm)
     {
         try {
-            $projectMember = ProjectMember::findOrFail($id);
+            $projectMember = ProjectMember::findOrFail($id_pm);
             $projectMember->delete();
 
-            return response()->noContent();
+            return response()->json(['message' => 'El miembro del equipo ha sido eliminado correctamente.'], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['error' => 'Project Member Not Found', 'details' => $e->getMessage()], 404);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json(['error' => 'Database Error', 'details' => $e->getMessage()], 500);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Server Error', 'details' => $e->getMessage()], 500);
         }
     }
+
+
 }

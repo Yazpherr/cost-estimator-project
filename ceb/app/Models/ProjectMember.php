@@ -9,14 +9,15 @@ class ProjectMember extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id_pm';
     protected $fillable = [
-        'project_code',
+        'project_id',
         'team_member_id',
     ];
 
     public function project()
     {
-        return $this->belongsTo(Project::class, 'project_code', 'project_code');
+        return $this->belongsTo(Project::class, 'project_id', 'id_pro');
     }
 
     public function teamMember()

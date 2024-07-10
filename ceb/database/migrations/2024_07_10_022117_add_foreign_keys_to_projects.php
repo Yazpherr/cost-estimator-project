@@ -9,7 +9,7 @@ return new class extends Migration {
     public function up() {
         try {
             Schema::table('projects', function (Blueprint $table) {
-                $table->foreign('project_owner_id')->references('id_po')->on('product_owners')->onDelete('cascade');
+                $table->foreign('product_owner_id')->references('id_po')->on('product_owners')->onDelete('cascade');
             });
         } catch (Exception $e) {
             Log::error('Error adding foreign keys to projects table: ' . $e->getMessage());

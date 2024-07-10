@@ -10,7 +10,7 @@ return new class extends Migration {
             $table->id('id_pro'); // Usar una clave primaria incremental
             $table->string('name');
             $table->text('description')->nullable();
-            $table->unsignedBigInteger('project_owner_id');
+            $table->unsignedBigInteger('product_owner_id');
             $table->integer('total_function_points')->nullable();
             $table->decimal('complexity_adjustment_values', 8, 2)->nullable();
             $table->decimal('estimated_effort', 8, 2)->nullable();

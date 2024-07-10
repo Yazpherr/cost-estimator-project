@@ -74,7 +74,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function isProductOwner()
     {
-        return $this->role === 'project-owner';
+        return $this->role === 'product-owner'; // Cambio realizado aquí
     }
 
     /**
@@ -88,11 +88,11 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Relación con la tabla project_owners
+     * Relación con la tabla product_owners
      */
-    public function projectOwner()
+    public function productOwner()
     {
-        return $this->hasOne(ProjectOwner::class, 'user_id');
+        return $this->hasOne(ProductOwner::class, 'user_id'); // Cambio realizado aquí
     }
 
     /**

@@ -8,11 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
-    // Solo permitir acceso a project owners
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if (Auth::user() && Auth::user()->role === 'project-owner') {
+            if (Auth::user() && Auth::user()->role === 'product-owner') {
                 return $next($request);
             }
             return response()->json(['message' => 'Unauthorized'], 403);
@@ -22,13 +21,13 @@ class ProjectController extends Controller
     public function myProjects()
     {
         try {
-            $projectOwner = Auth::user()->projectOwner;
+            $productOwner = Auth::user()->productOwner;
 
-            if (!$projectOwner) {
-                return response()->json(['error' => 'El usuario no es un project owner'], 403);
+            if (!$productOwner) {
+                return response()->json(['error' => 'El usuario no es un product owner'], 403);
             }
 
-            $projects = Project::where('project_owner_id', $projectOwner->id_po)->get();
+            $projects = Project::where('product_owner_id', $productOwner->id_po)->get();
 
             return response()->json($projects, 200);
         } catch (\Exception $e) {
@@ -53,21 +52,17 @@ class ProjectController extends Controller
             'associated_costs' => 'nullable|numeric',
         ]);
 
-        $projectCode = 'PRO-' . str_pad(Project::count() + 1, 3, '0', STR_PAD_LEFT);
-
         try {
-            // Obtener el project_owner_id desde la tabla project_owners
-            $projectOwner = Auth::user()->projectOwner;
+            $productOwner = Auth::user()->productOwner;
 
-            if (!$projectOwner) {
-                return response()->json(['error' => 'El usuario no es un project owner'], 403);
+            if (!$productOwner) {
+                return response()->json(['error' => 'El usuario no es un product owner'], 403);
             }
 
             $project = Project::create([
-                'project_code' => $projectCode,
                 'name' => $request->name,
                 'description' => $request->description,
-                'project_owner_id' => $projectOwner->id_po, // Usar el ID de project_owners
+                'product_owner_id' => $productOwner->id_po,
                 'total_function_points' => $request->total_function_points,
                 'complexity_adjustment_values' => $request->complexity_adjustment_values,
                 'estimated_effort' => $request->estimated_effort,

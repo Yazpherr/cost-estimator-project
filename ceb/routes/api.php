@@ -30,19 +30,24 @@ Route::middleware('auth:api')->group(function () {
         Route::resource('professions', ProfessionController::class)->except(['index', 'show']);
         Route::resource('salaries', SalaryController::class);
     });
+
     // RUTA PARA JEFES DE PROYECTO
-    Route::middleware('role:project-owner')->group(function () {
-        Route::get('my-projects', [ProjectController::class, 'myProjects']);
-        Route::resource('projects', ProjectController::class);
+    Route::middleware('role:product-owner')->group(function () {
+        Route::get('mis-proyectos', [ProjectController::class, 'myProjects']);
+        Route::post('crear-proyecto', [ProjectController::class, 'store']);
+        Route::get('proyectos', [ProjectController::class, 'index']);
+        Route::get('proyecto/{id}', [ProjectController::class, 'show']);
+        Route::put('actualizar-proyecto/{id}', [ProjectController::class, 'update']);
+        Route::delete('eliminar-proyecto/{id}', [ProjectController::class, 'destroy']);
 
-
-        Route::resource('professions', ProfessionController::class)->except(['index', 'show']);
         // REGISTRO DE TEAM MEMBERS
-        Route::post('team-members', [TeamMemberController::class, 'store']);
-        Route::delete('team-members/{id}', [TeamMemberController::class, 'destroy']);
-        Route::post('project-members', [ProjectMemberController::class, 'store']);
-        Route::delete('project-members/{id}', [ProjectMemberController::class, 'destroy']);
+        Route::post('registrar-miembro-equipo', [TeamMemberController::class, 'store']);
+        Route::delete('eliminar-miembro-equipo/{id}', [TeamMemberController::class, 'destroy']);
+        Route::post('asignar-miembro-proyecto', [ProjectMemberController::class, 'store']);
+        Route::delete('remover-miembro-proyecto/{id}', [ProjectMemberController::class, 'destroy']);
     });
+
+
 
     // RUTAS PARA MIEMBROS DEL EQUIPO
 

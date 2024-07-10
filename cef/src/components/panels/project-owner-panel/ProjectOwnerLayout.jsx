@@ -1,12 +1,12 @@
 import { Outlet } from "react-router-dom";
 import SidebarLarge from "../../UI/SidebarLarge";
 import SidebarResponsive from "../../UI/SidebarResponsive";
-import { FaHome, FaTasks } from "react-icons/fa";
+import { FaHome, FaProjectDiagram } from "react-icons/fa";
 
-const TeamMemberLayout = () => {
+const ProjectOwnerLayout = () => {
   const menuItems = [
-    { name: "Inicio", path: "/team-member/home", icon: <FaHome /> },
-    { name: "Tareas", path: "/team-member/tasks", icon: <FaTasks /> },
+    { name: "Inicio", path: "/project-owner/home", icon: <FaHome /> },
+    { name: "Proyectos", path: "/project-owner/projects", icon: <FaProjectDiagram /> },
   ];
 
   return (
@@ -24,4 +24,4 @@ const TeamMemberLayout = () => {
   );
 };
 
-export default TeamMemberLayout;
+export default ProjectOwnerLayout;

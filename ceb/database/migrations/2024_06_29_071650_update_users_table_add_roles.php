@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             // Actualizar la columna 'role' para asegurar el valor predeterminado
-            $table->enum('role', ['admin', 'project-owner', 'team-member'])->default('team-member')->change();
+            $table->enum('role', ['admin', 'product-owner', 'team-member'])->default('team-member')->change();
         });
     }
 

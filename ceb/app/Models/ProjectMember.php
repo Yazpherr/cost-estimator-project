@@ -10,19 +10,17 @@ class ProjectMember extends Model
     use HasFactory;
 
     protected $fillable = [
-        'project_id',
+        'project_code',
         'team_member_id',
     ];
 
-    // Relación con Project
     public function project()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Project::class, 'project_code', 'project_code');
     }
 
-    // Relación con TeamMember
     public function teamMember()
     {
-        return $this->belongsTo(TeamMember::class, 'team_member_id');
+        return $this->belongsTo(TeamMember::class, 'team_member_id', 'id_tm');
     }
 }

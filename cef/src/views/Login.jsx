@@ -27,9 +27,11 @@ const Login = () => {
         if (role === 'admin') {
           navigate('/admin');
         } else if (role === 'project-owner') {
-          navigate('/project-manager-dashboard');
+          navigate('/project-owner');
         } else if (role === 'team-member') {
           navigate('/team-member');
+        } else {
+          throw new Error('Rol de usuario no reconocido');
         }
       } else {
         throw new Error('Invalid response structure');
@@ -49,7 +51,6 @@ const Login = () => {
 
       <section className="flex flex-col justify-center items-center min-h-screen px-4">
         <div className="w-full max-w-md">
-          {/* Título de la página */}
           <div className="mb-12 text-center">
             <p className="text-blue-800 font-semibold uppercase mb-8">Inicio de sesión</p>
             <h2 className="sora-font text-3xl md:text-5xl font-bold bg-gradient-to-r from-blue-500 to-blue-800 bg-clip-text text-transparent">
@@ -58,13 +59,7 @@ const Login = () => {
             <p className="text-gray-600 text-base md:text-lg mt-8">Ingresa tus datos para acceder</p>
           </div>
 
-          {/* Formulario */}
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={handleLogin}
-            className="space-y-6 mt-4"
-          >
+          <Form form={form} layout="vertical" onFinish={handleLogin} className="space-y-6 mt-4">
             <div className="mb-4">
               {visibleAlertError && (
                 <div className="alert alert-danger">
@@ -73,17 +68,13 @@ const Login = () => {
               )}
             </div>
 
-            {/* Email */}
             <Form.Item
               name="email"
               hasFeedback
               label="Correo electrónico"
               rules={[
                 { required: true, message: 'Ingresa tu correo electrónico' },
-                {
-                  pattern: /^\S+@\S+\.\S+$/,
-                  message: 'Correo electrónico inválido',
-                },
+                { pattern: /^\S+@\S+\.\S+$/, message: 'Correo electrónico inválido' },
               ]}
             >
               <Input
@@ -94,7 +85,6 @@ const Login = () => {
               />
             </Form.Item>
 
-            {/* Password */}
             <Form.Item
               hasFeedback
               name="password"
@@ -108,7 +98,6 @@ const Login = () => {
               />
             </Form.Item>
 
-            {/* Botón de Login */}
             <Form.Item className="space-y-2">
               <Button
                 className="w-full bg-gradient-to-r from-blue-500 to-blue-800 text-white px-6 py-3 rounded-md hover:opacity-90 transition duration-300"
@@ -120,7 +109,6 @@ const Login = () => {
             </Form.Item>
           </Form>
 
-          {/* Links */}
           <div className="mt-6 text-center">
             <Link to="/register" className="text-gray-600 text-sm">
               ¿Aún no tienes cuenta? <span className="text-blue-800">Regístrate aquí</span>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\SalaryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -12,6 +13,8 @@ use App\Http\Controllers\ProfessionController;
 // Rutas de autenticación
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+
+
 
 // Rutas protegidas por autenticación JWT
 Route::middleware('auth:api')->group(function () {
@@ -32,10 +35,14 @@ Route::middleware('auth:api')->group(function () {
     Route::middleware('role:project-owner')->group(function () {
         Route::get('my-projects', [ProjectController::class, 'myProjects']);
         Route::resource('projects', ProjectController::class);
+
+
         Route::resource('professions', ProfessionController::class)->except(['index', 'show']);
         // REGISTRO DE TEAM MEMBERS
         Route::post('team-members', [TeamMemberController::class, 'store']);
         Route::delete('team-members/{id}', [TeamMemberController::class, 'destroy']);
+        Route::post('project-members', [ProjectMemberController::class, 'store']);
+        Route::delete('project-members/{id}', [ProjectMemberController::class, 'destroy']);
     });
 
     // RUTAS PARA MIEMBROS DEL EQUIPO

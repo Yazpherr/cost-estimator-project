@@ -1,12 +1,11 @@
-import { Outlet } from "react-router-dom";
 import SidebarLarge from "../../UI/SidebarLarge";
 import SidebarResponsive from "../../UI/SidebarResponsive";
-import { FaHome, FaTasks } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 
-const TeamMemberLayout = () => {
+const AdminHome = () => {
   const menuItems = [
-    { name: "Inicio", path: "/team-member/home", icon: <FaHome /> },
-    { name: "Tareas", path: "/team-member/tasks", icon: <FaTasks /> },
+    { name: "Inicio", path: "/admin", icon: <FaHome /> },
+    { name: "Registrar Dentista", path: "/admin/register-dentist", icon: <FaHome /> },
   ];
 
   return (
@@ -18,10 +17,11 @@ const TeamMemberLayout = () => {
         <SidebarResponsive menuItems={menuItems} />
       </div>
       <div className="flex-1 p-6">
-        <Outlet />
+        <h1>Bienvenido, Administrador</h1>
+        <p>Esta es la página de inicio del administrador.</p>
       </div>
     </div>
   );
 };
 
-export default TeamMemberLayout;
+export default AdminHome;

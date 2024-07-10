@@ -37,7 +37,6 @@ export const AuthProvider = ({ children }) => {
   const handleRegisterUser = async (userData) => {
     try {
       const response = await registerUser(userData);
-      console.log('User registered:', response);
       return response;
     } catch (error) {
       console.error('Error registering user:', error);
@@ -55,7 +54,7 @@ export const AuthProvider = ({ children }) => {
         if (role === 'admin') {
           navigate('/admin');
         } else if (role === 'project-owner') {
-          navigate('/project-manager-dashboard');
+          navigate('/project-owner');
         } else if (role === 'team-member') {
           navigate('/team-member');
         }
@@ -71,12 +70,10 @@ export const AuthProvider = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      const token = localStorage.getItem('token');
-      await logoutUser(token);
+      await logoutUser();
       localStorage.removeItem('token');
       setUser(null);
       navigate('/');
-      console.log('Logged out');
     } catch (error) {
       console.error('Error logging out:', error);
       throw error;
@@ -98,7 +95,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Definir PropTypes para validar las props
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };

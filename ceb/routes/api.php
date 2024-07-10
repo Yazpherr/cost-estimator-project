@@ -5,21 +5,20 @@ use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\SalaryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ProjectManagerController;
+
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\ProfessionController;
 
 // Rutas de autenticación
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout']);
 
 
 
 // Rutas protegidas por autenticación JWT
 Route::middleware('auth:api')->group(function () {
     // Ruta para cerrar sesión
-    Route::post('logout', [AuthController::class, 'logout']);
 
     // Ruta para obtener el usuario autenticado
     Route::get('user', [AuthController::class, 'user']);

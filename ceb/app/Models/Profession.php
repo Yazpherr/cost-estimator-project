@@ -16,9 +16,10 @@ class Profession extends Model
     {
         return $this->hasMany(ProductOwner::class, 'profession_id', 'id_prof');
     }
-
+    
     public function teamMembers()
     {
         return $this->hasMany(TeamMember::class, 'profession_id', 'id_prof');
     }
+
 }

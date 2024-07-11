@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Form, Input, Button, Spin, notification, Table, Modal } from "antd";
-import { createProject, getProductOwnerProjects, updateProject } from "../../../services/api"; // Asegúrate de ajustar la ruta según tu estructura de carpetas
+import { createProject, getProductOwnerProjects, updateProject, calculateTotalFunctionPoints, calculateEstimatedTime, calculateAssociatedCosts } from "../../../services/api";
 
 const CrearProyectoPO = () => {
   const [formData, setFormData] = useState({
@@ -27,7 +27,15 @@ const CrearProyectoPO = () => {
     setLoading(true);
     try {
       const response = await getProductOwnerProjects();
-      setProjects(response.data);
+      const projectsData = response.data;
+
+      // Calcular los puntos de función y el tiempo estimado para cada proyecto
+      for (let project of projectsData) {
+        await handleCalculateFunctionPoints(project.id_pro);
+        await handleCalculateEstimatedTime(project.id_pro);
+      }
+
+      setProjects(projectsData);
     } catch (error) {
       notification.error({
         message: "Error",
@@ -36,6 +44,28 @@ const CrearProyectoPO = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCalculateFunctionPoints = async (projectId) => {
+    try {
+      await calculateTotalFunctionPoints(projectId);
+    } catch (error) {
+      console.error("Hubo un error al calcular los puntos de función:", error);
+    }
+  };
+
+  const handleCalculateEstimatedTime = async (projectId) => {
+    try {
+      await calculateEstimatedTime(projectId);
+    } catch (error) {
+      console.error("Hubo un error al calcular el tiempo estimado:", error);
+    }
+  };
+
+  const calculateWorkDays = (hours) => {
+    const hoursPerDay = 8;
+    const workDays = hours / hoursPerDay;
+    return workDays.toFixed(2); // Redondear a 2 decimales
   };
 
   const handleChange = (e) => {
@@ -121,9 +151,11 @@ const CrearProyectoPO = () => {
       key: "estimated_effort",
     },
     {
-      title: "Tiempo Estimado",
-      dataIndex: "estimated_time",
-      key: "estimated_time",
+      title: "Tiempo Estimado (Horas Hombre / Días Laborales)",
+      key: "estimated_time_days",
+      render: (text, record) => (
+        <span>{record.estimated_time} horas / {calculateWorkDays(record.estimated_time)} días</span>
+      ),
     },
     {
       title: "Costos Asociados",
@@ -178,7 +210,7 @@ const CrearProyectoPO = () => {
             <Form.Item label="Esfuerzo Estimado" name="estimated_effort">
               <Input type="number" />
             </Form.Item>
-            <Form.Item label="Tiempo Estimado" name="estimated_time">
+            <Form.Item label="Tiempo Estimado (Horas Hombre)" name="estimated_time">
               <Input type="number" />
             </Form.Item>
             <Form.Item label="Costos Asociados" name="associated_costs">
@@ -220,7 +252,7 @@ const CrearProyectoPO = () => {
             <Form.Item label="Esfuerzo Estimado" name="estimated_effort">
               <Input type="number" />
             </Form.Item>
-            <Form.Item label="Tiempo Estimado" name="estimated_time">
+            <Form.Item label="Tiempo Estimado (Horas Hombre)" name="estimated_time">
               <Input type="number" />
             </Form.Item>
             <Form.Item label="Costos Asociados" name="associated_costs">

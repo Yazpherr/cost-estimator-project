@@ -25,7 +25,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('user', [AuthController::class, 'user']);
 
 
-    // RUTA PARA ADMINISTRADORES
+    // RUTA PARA ADMINISTRADORES_______________________________________________________________________________________
     Route::middleware('role:admin')->group(function () {
         Route::post('register-product-owner', [AuthController::class, 'registerProductOwner']); // registrar un product-owner (solo admin)
         // Route::resource('professions', ProfessionController::class)->except(['index', 'show']);
@@ -38,7 +38,8 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('eliminar-profesion/{id}', [ProfessionController::class, 'destroy']); // Eliminar una profesión
     });
 
-    // RUTA PARA JEFES DE PROYECTO
+
+    // RUTA PARA JEFES DE PROYECTO_______________________________________________________________________________________
     Route::middleware('role:product-owner')->group(function () {
         Route::get('mis-proyectos-po', [ProjectController::class, 'myProjectsProductOwner']);
         Route::post('crear-proyecto', [ProjectController::class, 'store']);
@@ -47,6 +48,10 @@ Route::middleware('auth:api')->group(function () {
         Route::put('actualizar-proyecto/{id}', [ProjectController::class, 'update']);
         Route::delete('eliminar-proyecto/{id}', [ProjectController::class, 'destroy']);
 
+        Route::get('calcular-puntos-funcion/{projectId}', [ProjectController::class, 'calculateTotalFunctionPoints']);
+
+        // TIEMPO ESTIMADO
+        Route::get('calcular-tiempo-estimado/{projectId}', [ProjectController::class, 'calculateEstimatedTime']);
 
         // REQUERIMIENTOS
         Route::post('crear-requerimiento', [RequirementController::class, 'store']); // Ruta para crear requerimientos
@@ -61,13 +66,24 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('eliminar-miembro-equipo/{id}', [TeamMemberController::class, 'destroy']); // Eliminar un miembro del equipo
 
         Route::post('asignar-miembro-proyecto', [ProjectMemberController::class, 'store']); // Asignar un miembro a un proyecto
+        Route::get('asignaciones-proyectos', [ProjectMemberController::class, 'index']); // obtener las asignaciones
+
         Route::delete('eliminar-miembro-proyecto/{id}', [ProjectMemberController::class, 'destroy']); // Eliminar un miembro de un proyecto
 
         // ASIGNAR REQUERIMIENTOS A LOS MIEMBROS DEL PROYECTO
         Route::put('asignar-requerimiento/{id}', [RequirementController::class, 'assignTeamMember']);
+
+        //  obtener los miembros del equipo con sus salarios
+        Route::get('proyecto/{id}/miembros', [ProjectController::class, 'getTeamMembersWithSalaries']);
+
+        //PROFESIONES
+        // Ruta para obtener las profesiones para el product owner
+        Route::get('po/obtener-profesiones', [ProfessionController::class, 'getProfessionsForPO']);
+        Route::get('calcular-costos-asociados/{projectId}', [ProjectController::class, 'calculateAssociatedCosts']);
+
     });
 
-    // RUTAS PARA MIEMBROS DEL EQUIPO
+    // RUTAS PARA MIEMBROS DEL EQUIPO _______________________________________________________________________________________
     Route::middleware('role:team-member')->group(function () {
         // aca escriir las rutas de proyectos y requerimientos
         // Obtener los proyectos a los que el miembro del equipo está asignado
@@ -80,6 +96,5 @@ Route::middleware('auth:api')->group(function () {
         // Interactuar con los requerimientos
         Route::put('actualizar-requerimiento/{id}', [RequirementController::class, 'update']);
         Route::delete('eliminar-requerimiento/{id}', [RequirementController::class, 'destroy']);
-
     });
 });

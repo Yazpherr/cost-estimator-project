@@ -9,6 +9,7 @@ import LandingPage from "./views/LandingPage";
 import AdminLayout from "./components/panels/admin-panel/AdminLayout";
 import Profesion from "./components/panels/admin-panel/Profesion";
 import PuntosDeFuncion from "./components/panels/admin-panel/PuntosDeFuncion";
+import CrearProductOwner from "./components/panels/admin-panel/CrearProductOwner";
 
 // RUTA PARA LOS PROJECTS-OWNERS
 import ProjectOwnerLayout from "./components/panels/project-owner-panel/ProjectOwnerLayout";
@@ -42,6 +43,7 @@ const App = () => {
             }
           >
             <Route path="profesion" element={<Profesion />} />
+            <Route path="crear-product-owner" element={<CrearProductOwner />} />
             <Route path="puntos-de-funcion" element={<PuntosDeFuncion />} />
           </Route>
 

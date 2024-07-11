@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Profession;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -11,10 +12,20 @@ class ProfessionController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api');
-        $this->middleware('role:admin')->except(['index', 'show']);
+
     }
 
     public function index()
+    {
+        try {
+            $professions = Profession::all();
+            return response()->json($professions, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener las profesiones', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getProfessionsForPO()
     {
         return Profession::all();
     }
@@ -75,10 +86,6 @@ class ProfessionController extends Controller
         }
     }
 
-
-
-
-
     public function destroy($id)
     {
         $profession = Profession::findOrFail($id);
@@ -86,4 +93,30 @@ class ProfessionController extends Controller
 
         return response()->noContent();
     }
+
+    public function getTeamMembersWithSalaries($id)
+    {
+        try {
+            $project = Project::findOrFail($id);
+
+            // Obtener los miembros del equipo asignados al proyecto con sus salarios
+            $teamMembers = $project->teamMembers()->with('profession')->get();
+
+            // Formatear los datos para incluir el salario de cada miembro del equipo
+            $teamMembersWithSalaries = $teamMembers->map(function ($member) {
+                return [
+                    'id_tm' => $member->id_tm,
+                    'name' => $member->user->name,
+                    'email' => $member->user->email,
+                    'profession' => $member->profession->name,
+                    'salary' => $member->profession->salary,
+                ];
+            });
+
+            return response()->json($teamMembersWithSalaries, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'No se pudo obtener los miembros del equipo', 'details' => $e->getMessage()], 500);
+        }
+    }
 }
+

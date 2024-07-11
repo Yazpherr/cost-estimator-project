@@ -10,6 +10,8 @@ const componentOptions = [
   { label: "Consulta externa", value: "Consulta externa" },
   { label: "Salida externa", value: "Salida externa" },
   { label: "Archivo lógico interno", value: "Archivo lógico interno" },
+  { label: "Archivo lógico externo", value: "Archivo lógico externo" },
+  { label: "No funcional", value: "No funcional" }
 ];
 
 const complexityOptions = [
@@ -23,6 +25,8 @@ const functionPointsTable = {
   "Consulta externa": { bajo: 3, medio: 4, alto: 6 },
   "Salida externa": { bajo: 4, medio: 5, alto: 7 },
   "Archivo lógico interno": { bajo: 7, medio: 10, alto: 15 },
+  "Archivo lógico externo": { bajo: 5, medio: 7, alto: 10 },
+  "No funcional": { bajo: 0, medio: 0, alto: 0 }
 };
 
 const RequerimientosTM = () => {
@@ -109,11 +113,15 @@ const RequerimientosTM = () => {
 
   const handleComponentTypeChange = (value) => {
     form.setFieldsValue({ component_type: value });
-    const currentValues = form.getFieldsValue();
-    const complexityLevel = currentValues.complexity_level;
-    if (complexityLevel && !isEditingFunctionPoints) {
-      const functionPoints = functionPointsTable[value][complexityLevel];
-      form.setFieldsValue({ function_points: functionPoints });
+    if (value === "No funcional") {
+      form.setFieldsValue({ complexity_level: null, function_points: null });
+    } else {
+      const currentValues = form.getFieldsValue();
+      const complexityLevel = currentValues.complexity_level;
+      if (complexityLevel && !isEditingFunctionPoints) {
+        const functionPoints = functionPointsTable[value][complexityLevel];
+        form.setFieldsValue({ function_points: functionPoints });
+      }
     }
   };
 
@@ -121,7 +129,7 @@ const RequerimientosTM = () => {
     form.setFieldsValue({ complexity_level: value });
     const currentValues = form.getFieldsValue();
     const componentType = currentValues.component_type;
-    if (componentType && !isEditingFunctionPoints) {
+    if (componentType && componentType !== "No funcional" && !isEditingFunctionPoints) {
       const functionPoints = functionPointsTable[componentType][value];
       form.setFieldsValue({ function_points: functionPoints });
     }
@@ -139,57 +147,68 @@ const RequerimientosTM = () => {
       title: "ID del Proyecto",
       dataIndex: "id_pro",
       key: "id_pro",
+      responsive: ['md']
     },
     {
       title: "Nombre del Proyecto",
       dataIndex: "name",
       key: "name",
+      responsive: ['md']
     },
     {
       title: "Descripción",
       dataIndex: "description",
       key: "description",
+      responsive: ['md']
     },
     {
       title: "ID del Product Owner",
       dataIndex: "product_owner_id",
       key: "product_owner_id",
+      responsive: ['md']
     },
     {
       title: "Total de Puntos de Función",
       dataIndex: "total_function_points",
       key: "total_function_points",
+      responsive: ['md']
     },
     {
       title: "Valores de Ajuste de Complejidad",
       dataIndex: "complexity_adjustment_values",
       key: "complexity_adjustment_values",
+      responsive: ['md']
     },
+    // {
+    //   title: "Esfuerzo Estimado",
+    //   dataIndex: "estimated_effort",
+    //   key: "estimated_effort",
+    //   responsive: ['md']
+    // },
     {
-      title: "Esfuerzo Estimado",
-      dataIndex: "estimated_effort",
-      key: "estimated_effort",
-    },
-    {
-      title: "Tiempo Estimado",
+      title: "Tiempo Sueldos UF",
       dataIndex: "estimated_time",
       key: "estimated_time",
+      responsive: ['md']
     },
     {
       title: "Costos Asociados",
       dataIndex: "associated_costs",
       key: "associated_costs",
+      responsive: ['md']
     },
-    {
-      title: "Creado el",
-      dataIndex: "created_at",
-      key: "created_at",
-    },
-    {
-      title: "Actualizado el",
-      dataIndex: "updated_at",
-      key: "updated_at",
-    },
+    // {
+    //   title: "Creado el",
+    //   dataIndex: "created_at",
+    //   key: "created_at",
+    //   responsive: ['md']
+    // },
+    // {
+    //   title: "Actualizado el",
+    //   dataIndex: "updated_at",
+    //   key: "updated_at",
+    //   responsive: ['md']
+    // },
     {
       title: "Acciones",
       key: "actions",
@@ -206,31 +225,37 @@ const RequerimientosTM = () => {
       title: "Nombre del Requerimiento",
       dataIndex: "name",
       key: "name",
+      responsive: ['md']
     },
     {
       title: "Descripción",
       dataIndex: "description",
       key: "description",
+      responsive: ['md']
     },
     {
       title: "Tipo de Componente",
       dataIndex: "component_type",
       key: "component_type",
+      responsive: ['md']
     },
     {
       title: "Nivel de Complejidad",
       dataIndex: "complexity_level",
       key: "complexity_level",
+      responsive: ['md']
     },
     {
       title: "Puntos de Función",
       dataIndex: "function_points",
       key: "function_points",
+      responsive: ['md']
     },
     {
       title: "Justificación",
       dataIndex: "justification",
       key: "justification",
+      responsive: ['md']
     },
     {
       title: "Acciones",
@@ -246,7 +271,6 @@ const RequerimientosTM = () => {
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
       <h1>Bienvenido, Team Member</h1>
-      <p>Esta es la página de proyectos del Team Member.</p>
 
       <Spin spinning={loadingProjects}>
         <Table columns={projectColumns} dataSource={projects} rowKey="id_pro" />

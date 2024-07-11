@@ -18,7 +18,6 @@ const TeamMemberHome = () => {
       </div>
       <div className="flex-1 p-6">
         <h1>Bienvenido, Team Member</h1>
-        <p>Esta es la página de inicio del Team Member.</p>
       </div>
     </div>
   );

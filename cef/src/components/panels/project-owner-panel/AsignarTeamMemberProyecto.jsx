@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Form, Button, Spin, notification, Modal, Select } from "antd";
-import { assignTeamMemberToProject, getAllTeamMembers, getProductOwnerProjects } from "../../../services/api"; // Ruta correcta al archivo api
+import { Form, Button, Spin, notification, Modal, Select, Table } from "antd";
+import { assignTeamMemberToProject, getAllTeamMembers, getProductOwnerProjects, getAllProjectAssignments } from "../../../services/api"; // Ruta correcta al archivo api
 
 const AsignarTeamMemberProyecto = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +11,7 @@ const AsignarTeamMemberProyecto = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [teamMembers, setTeamMembers] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [assignments, setAssignments] = useState([]);
 
   const fetchTeamMembers = async () => {
     setLoading(true);
@@ -42,10 +43,40 @@ const AsignarTeamMemberProyecto = () => {
     }
   };
 
+  const fetchAssignments = async () => {
+    setLoading(true);
+    try {
+      const response = await getAllProjectAssignments();
+      const assignmentsWithDetails = response.data.map(assignment => {
+        const project = projects.find(p => p.id_pro === assignment.project_id);
+        const member = teamMembers.find(m => m.id_tm === assignment.team_member_id);
+        return {
+          ...assignment,
+          project_name: project ? project.name : "Proyecto no encontrado",
+          team_member_name: member ? member.user.name : "Miembro no encontrado"
+        };
+      });
+      setAssignments(assignmentsWithDetails);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      notification.error({
+        message: "Error",
+        description: "Hubo un error al obtener las asignaciones de proyectos. Por favor, intenta nuevamente."
+      });
+    }
+  };
+
   useEffect(() => {
     fetchTeamMembers();
     fetchProjects();
   }, []);
+
+  useEffect(() => {
+    if (projects.length > 0 && teamMembers.length > 0) {
+      fetchAssignments();
+    }
+  }, [projects, teamMembers]);
 
   const handleSelectChange = (value, name) => {
     setFormData({
@@ -68,6 +99,7 @@ const AsignarTeamMemberProyecto = () => {
         description: "El miembro del equipo ha sido asignado exitosamente al proyecto."
       });
       setModalVisible(false); // Cerrar el modal después de asignar el miembro del equipo
+      fetchAssignments(); // Refrescar las asignaciones
     } catch (error) {
       setLoading(false);
       notification.error({
@@ -78,16 +110,43 @@ const AsignarTeamMemberProyecto = () => {
     }
   };
 
+  const columns = [
+    {
+      title: "ID del Proyecto",
+      dataIndex: "project_id",
+      key: "project_id"
+    },
+    {
+      title: "Nombre del Proyecto",
+      dataIndex: "project_name",
+      key: "project_name"
+    },
+    {
+      title: "ID del Miembro del Equipo",
+      dataIndex: "team_member_id",
+      key: "team_member_id"
+    },
+    {
+      title: "Nombre del Miembro del Equipo",
+      dataIndex: "team_member_name",
+      key: "team_member_name"
+    }
+  ];
+
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
-      <h1>Bienvenido, Project Owner</h1>
+      <h1>Asignaciones de Proyectos</h1>
       <Button 
         type="primary" 
-        style={{ marginBottom: "1rem", position: "absolute", top: "2rem", right: "2rem" }} 
+        style={{ marginBottom: "1rem" }} 
         onClick={() => setModalVisible(true)}
       >
         Asignar Miembro al Proyecto
       </Button>
+      <Spin spinning={loading}>
+        <Table dataSource={assignments} columns={columns} rowKey="id" />
+      </Spin>
+
       <Modal
         title="Asignar Miembro al Proyecto"
         visible={modalVisible}

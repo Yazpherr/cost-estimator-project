@@ -39,8 +39,7 @@ const Profesion = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setLoading(true);
     try {
       const response = await createProfession(formData);
@@ -70,8 +69,7 @@ const Profesion = () => {
     setEditModalVisible(true);
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
+  const handleUpdate = async () => {
     setLoading(true);
     try {
       const response = await updateProfession(currentProfession.id_prof, formData);
@@ -132,27 +130,15 @@ const Profesion = () => {
         footer={null}
       >
         <Spin spinning={loading}>
-          <Form layout="vertical" onSubmit={handleSubmit}>
-            <Form.Item label="Nombre" required>
-              <Input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
+          <Form layout="vertical" onFinish={handleSubmit}>
+            <Form.Item label="Nombre" name="name" rules={[{ required: true, message: "Por favor, ingrese el nombre" }]}>
+              <Input type="text" value={formData.name} onChange={handleChange} />
             </Form.Item>
-            <Form.Item label="Salario" required>
-              <Input
-                type="number"
-                name="salary"
-                value={formData.salary}
-                onChange={handleChange}
-                required
-              />
+            <Form.Item label="Salario" name="salary" rules={[{ required: true, message: "Por favor, ingrese el salario" }]}>
+              <Input type="number" value={formData.salary} onChange={handleChange} />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" onClick={handleSubmit}>
+              <Button type="primary" htmlType="submit">
                 Crear Profesión
               </Button>
             </Form.Item>
@@ -166,27 +152,15 @@ const Profesion = () => {
         footer={null}
       >
         <Spin spinning={loading}>
-          <Form layout="vertical" onSubmit={handleUpdate}>
-            <Form.Item label="Nombre" required>
-              <Input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
+          <Form layout="vertical" onFinish={handleUpdate}>
+            <Form.Item label="Nombre" name="name" rules={[{ required: true, message: "Por favor, ingrese el nombre" }]}>
+              <Input type="text" value={formData.name} onChange={handleChange} />
             </Form.Item>
-            <Form.Item label="Salario" required>
-              <Input
-                type="number"
-                name="salary"
-                value={formData.salary}
-                onChange={handleChange}
-                required
-              />
+            <Form.Item label="Salario" name="salary" rules={[{ required: true, message: "Por favor, ingrese el salario" }]}>
+              <Input type="number" value={formData.salary} onChange={handleChange} />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" onClick={handleUpdate}>
+              <Button type="primary" htmlType="submit">
                 Actualizar Profesión
               </Button>
             </Form.Item>

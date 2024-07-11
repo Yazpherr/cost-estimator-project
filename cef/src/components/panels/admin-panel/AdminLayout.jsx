@@ -1,12 +1,13 @@
 import { Outlet } from 'react-router-dom';
 import SidebarLarge from '../../UI/SidebarLarge';
 import SidebarResponsive from '../../UI/SidebarResponsive';
-import { FaHome, FaUserPlus } from 'react-icons/fa';
+import { FaHome } from 'react-icons/fa';
 
 const AdminLayout = () => {
   const menuItems = [
+    { name: "Products Owners", path: "/admin/crear-product-owner", icon: <FaHome /> },
     { name: "Profesion", path: "/admin/profesion", icon: <FaHome /> },
-    { name: "Puntos de Funcion", path: "/admin/puntos-de-funcion", icon: <FaUserPlus /> },
+    // { name: "Puntos de Funcion", path: "/admin/puntos-de-funcion", icon: <FaUserPlus /> },
   ];
 
   return (

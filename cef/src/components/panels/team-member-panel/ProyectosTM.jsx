@@ -55,8 +55,7 @@ const ProyectosTM = () => {
 
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
-      <h1>Bienvenido, Project Owner</h1>
-      <p>Esta es la página de Proyectos.</p>
+      <h1>Bienvenido, Team Member</h1>
       <Spin spinning={loading}>
         <Table columns={columns} dataSource={projects} rowKey="id" />
       </Spin>

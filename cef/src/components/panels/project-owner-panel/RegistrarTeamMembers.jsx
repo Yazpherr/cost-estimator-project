@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Form, Input, Button, Spin, notification, Modal, Table } from "antd";
-import { createTeamMember, getAllTeamMembers } from "../../../services/api"; // Ruta correcta al archivo api
+import { Form, Input, Button, Spin, notification, Modal, Table, Select } from "antd";
+import { createTeamMember, getAllTeamMembers, getProfessionsForPO, updateTeamMember } from "../../../services/api"; // Ruta correcta al archivo api
 
 const CrearMiembroEquipo = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +12,10 @@ const CrearMiembroEquipo = () => {
   });
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [teamMembers, setTeamMembers] = useState([]);
+  const [professions, setProfessions] = useState([]);
+  const [currentMember, setCurrentMember] = useState(null);
 
   const fetchTeamMembers = async () => {
     setLoading(true);
@@ -29,8 +32,24 @@ const CrearMiembroEquipo = () => {
     }
   };
 
+  const fetchProfessions = async () => {
+    setLoading(true);
+    try {
+      const response = await getProfessionsForPO();
+      setProfessions(response.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      notification.error({
+        message: "Error",
+        description: "Hubo un error al obtener las profesiones. Por favor, intenta nuevamente."
+      });
+    }
+  };
+
   useEffect(() => {
     fetchTeamMembers();
+    fetchProfessions();
   }, []);
 
   const handleChange = (e) => {
@@ -50,7 +69,7 @@ const CrearMiembroEquipo = () => {
         message: "Miembro del equipo creado",
         description: "El miembro del equipo se ha creado exitosamente."
       });
-      setTeamMembers([...teamMembers, response.data]); // Actualizar la tabla con el nuevo miembro del equipo
+      fetchTeamMembers(); // Refrescar la tabla con los miembros del equipo
       setModalVisible(false); // Cerrar el modal después de crear el miembro del equipo
     } catch (error) {
       setLoading(false);
@@ -59,6 +78,36 @@ const CrearMiembroEquipo = () => {
         description: "Hubo un error al crear el miembro del equipo. Por favor, intenta nuevamente."
       });
       console.error("Hubo un error al crear el miembro del equipo:", error);
+    }
+  };
+
+  const handleEdit = (record) => {
+    setCurrentMember(record);
+    setFormData({
+      profession_id: record.profession.id_prof,
+    });
+    setEditModalVisible(true);
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await updateTeamMember(currentMember.id_tm, { profession_id: formData.profession_id });
+      setLoading(false);
+      notification.success({
+        message: "Miembro del equipo actualizado",
+        description: "El miembro del equipo se ha actualizado exitosamente."
+      });
+      fetchTeamMembers(); // Refrescar la tabla con los miembros del equipo
+      setEditModalVisible(false); // Cerrar el modal después de actualizar el miembro del equipo
+    } catch (error) {
+      setLoading(false);
+      notification.error({
+        message: "Error",
+        description: "Hubo un error al actualizar el miembro del equipo. Por favor, intenta nuevamente."
+      });
+      console.error("Hubo un error al actualizar el miembro del equipo:", error);
     }
   };
 
@@ -77,6 +126,18 @@ const CrearMiembroEquipo = () => {
       title: "Profesión",
       dataIndex: ["profession", "name"],
       key: "profession"
+    },
+    {
+      title: "Salario",
+      dataIndex: ["profession", "salary"],
+      key: "salary"
+    },
+    {
+      title: "Acciones",
+      key: "actions",
+      render: (text, record) => (
+        <Button onClick={() => handleEdit(record)}>Editar</Button>
+      )
     }
   ];
 
@@ -91,7 +152,7 @@ const CrearMiembroEquipo = () => {
         Crear Miembro del Equipo
       </Button>
       <Spin spinning={loading}>
-        <Table columns={columns} dataSource={teamMembers} rowKey="id" />
+        <Table columns={columns} dataSource={teamMembers} rowKey="id_tm" />
       </Spin>
 
       <Modal
@@ -137,17 +198,53 @@ const CrearMiembroEquipo = () => {
               />
             </Form.Item>
             <Form.Item label="ID de Profesión" required>
-              <Input
-                type="text"
+              <Select
                 name="profession_id"
                 value={formData.profession_id}
-                onChange={handleChange}
+                onChange={(value) => handleChange({ target: { name: "profession_id", value } })}
                 required
-              />
+              >
+                {professions.map(profession => (
+                  <Select.Option key={profession.id_prof} value={profession.id_prof}>
+                    {profession.name} - Salario: {profession.salary}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
             <Form.Item>
               <Button type="primary" htmlType="submit" onClick={handleSubmit}>
                 Crear Miembro del Equipo
+              </Button>
+            </Form.Item>
+          </Form>
+        </Spin>
+      </Modal>
+
+      <Modal
+        title="Editar Miembro del Equipo"
+        visible={editModalVisible}
+        onCancel={() => setEditModalVisible(false)}
+        footer={null}
+      >
+        <Spin spinning={loading}>
+          <Form layout="vertical" onSubmit={handleUpdate}>
+            <Form.Item label="ID de Profesión" required>
+              <Select
+                name="profession_id"
+                value={formData.profession_id}
+                onChange={(value) => handleChange({ target: { name: "profession_id", value } })}
+                required
+              >
+                {professions.map(profession => (
+                  <Select.Option key={profession.id_prof} value={profession.id_prof}>
+                    {profession.name} - Salario: {profession.salary}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" onClick={handleUpdate}>
+                Actualizar Miembro del Equipo
               </Button>
             </Form.Item>
           </Form>

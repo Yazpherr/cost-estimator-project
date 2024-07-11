@@ -14,6 +14,17 @@ class ProjectMemberController extends Controller
         $this->middleware('auth:api');
     }
 
+    public function index()
+    {
+        try {
+            // Obtener todas las asignaciones de proyectos
+            $projectMembers = ProjectMember::all();
+            return response()->json($projectMembers, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'No se pudieron obtener las asignaciones de proyectos', 'details' => $e->getMessage()], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         // Verificar si el usuario autenticado es product owner
@@ -58,6 +69,4 @@ class ProjectMemberController extends Controller
             return response()->json(['error' => 'Server Error', 'details' => $e->getMessage()], 500);
         }
     }
-
-
 }

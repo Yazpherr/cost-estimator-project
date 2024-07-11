@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Requirement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -176,6 +177,99 @@ class ProjectController extends Controller
             return response()->noContent();
         } catch (\Exception $e) {
             return response()->json(['error' => 'No se pudo eliminar el proyecto', 'details' => $e->getMessage()], 500);
+        }
+    }
+    // contar los puntos de funcion
+    // En ProjectController.php
+    public function calculateTotalFunctionPoints($projectId)
+    {
+        try {
+            $project = Project::findOrFail($projectId);
+
+            // Obtener todos los requerimientos asociados al proyecto
+            $requirements = Requirement::where('project_id', $projectId)->get();
+
+            // Sumar los puntos de función de todos los requerimientos
+            $totalFunctionPoints = $requirements->sum('function_points');
+
+            // Actualizar el total de puntos de función en el proyecto
+            $project->total_function_points = $totalFunctionPoints;
+            $project->save();
+
+            return response()->json($project, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'No se pudieron calcular los puntos de función', 'details' => $e->getMessage()], 500);
+        }
+    }
+    // CALCULAR COSTOS ASOCIADOS
+    public function calculateAssociatedCosts($projectId)
+    {
+        try {
+            $project = Project::findOrFail($projectId);
+
+            // Obtener los miembros del equipo del proyecto
+            $teamMembers = $project->projectMembers()->with('teamMember.profession')->get();
+
+            $totalCost = 0;
+            // Sumar los salarios de los miembros del equipo
+            foreach ($teamMembers as $member) {
+                $totalCost += $member->teamMember->profession->salary;
+            }
+
+            // Incluir el salario del jefe de proyecto
+            $productOwner = $project->productOwner->profession->salary;
+            $totalCost += $productOwner;
+
+            $project->associated_costs = $totalCost;
+            $project->save();
+
+            return response()->json(['associated_costs' => $totalCost], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'No se pudieron calcular los costos asociados', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    public function calculateEstimatedTime($projectId)
+    {
+        $project = Project::findOrFail($projectId);
+        $functionPoints = $project->total_function_points;
+
+        // Suponiendo que toma 3 horas producir 1 punto de función
+        $hoursPerFunctionPoint = 3;
+        $estimatedHours = $functionPoints * $hoursPerFunctionPoint;
+
+        // Suponiendo que se trabaja 8 horas por día
+        $hoursPerDay = 8;
+        $estimatedDays = $estimatedHours / $hoursPerDay;
+
+        // Actualizar el proyecto con el tiempo estimado en horas
+        $project->estimated_time = $estimatedHours;
+        $project->save();
+
+        return response()->json($project, 200);
+    }
+    public function getTeamMembersWithSalaries($id)
+    {
+        try {
+            $project = Project::findOrFail($id);
+
+            // Obtener los miembros del equipo asignados al proyecto con sus salarios
+            $teamMembers = $project->teamMembers()->with('profession')->get();
+
+            // Formatear los datos para incluir el salario de cada miembro del equipo
+            $teamMembersWithSalaries = $teamMembers->map(function ($member) {
+                return [
+                    'id_tm' => $member->id_tm,
+                    'name' => $member->user->name,
+                    'email' => $member->user->email,
+                    'profession' => $member->profession->name,
+                    'salary' => $member->profession->salary,
+                ];
+            });
+
+            return response()->json($teamMembersWithSalaries, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'No se pudo obtener los miembros del equipo', 'details' => $e->getMessage()], 500);
         }
     }
 }

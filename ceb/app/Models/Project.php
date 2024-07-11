@@ -29,4 +29,9 @@ class Project extends Model
     {
         return $this->hasMany(Requirement::class, 'project_id', 'id_pro');
     }
+
+    public function teamMembers()
+    {
+        return $this->belongsToMany(TeamMember::class, 'project_members', 'project_id', 'team_member_id');
+    }
 }

@@ -52,5 +52,20 @@ export const createProject = (projectData) =>
 export const getProductOwnerProjects = () =>
     api.get("/mis-proyectos-po");
 
+// Función para crear un requerimiento
+export const createRequirement = (requirementData) => {
+    return api.post("/crear-requerimiento", requirementData);
+  };
+
+  // Función para obtener todos los requerimientos
+export const getAllRequirements = () => {
+    return api.get("/obtener-requerimientos");
+  };
+
+
+// Función para crear un nuevo miembro del equipo
+export const createTeamMember = (teamMemberData) => {
+    return api.post("/crear-miembro-equipo", teamMemberData);
+  };
 
 export default api;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { Form, Input, Button, Spin, notification, Table, Modal } from "antd";
 import { createProject, getProductOwnerProjects } from "../../../services/api"; // Asegúrate de ajustar la ruta según tu estructura de carpetas
 
@@ -67,6 +67,11 @@ const CrearProyectoPO = () => {
 
   const columns = [
     {
+      title: 'ID del Proyecto',
+      dataIndex: 'id_pro',
+      key: 'id_pro',
+    },
+    {
       title: 'Nombre del Proyecto',
       dataIndex: 'name',
       key: 'name',
@@ -96,7 +101,6 @@ const CrearProyectoPO = () => {
       dataIndex: 'associated_costs',
       key: 'associated_costs',
     },
-    // Agrega más columnas según tus necesidades
   ];
 
   return (

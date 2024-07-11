@@ -50,6 +50,9 @@ Route::middleware('auth:api')->group(function () {
 
         // REQUERIMIENTOS
         Route::post('crear-requerimiento', [RequirementController::class, 'store']); // Ruta para crear requerimientos
+        Route::get('obtener-requerimientos', [RequirementController::class, 'getAllRequirements']); // Ruta para obtener todos los requerimientos
+
+
 
         // REGISTRO DE TEAM MEMBERS
         Route::post('crear-miembro-equipo', [TeamMemberController::class, 'store']); // Crear un nuevo miembro del equipo

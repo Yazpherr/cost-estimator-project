@@ -1,6 +1,29 @@
 import { useState, useEffect } from "react";
-import { Table, Spin, notification, Button, Modal, Form, Input } from "antd";
+import { Table, Spin, notification, Button, Modal, Form, Input, Select } from "antd";
+import { EditOutlined } from '@ant-design/icons';
 import { getTeamMemberProjects, getProjectRequirements, updateRequirement } from "../../../services/api"; // Ruta correcta al archivo api
+
+const { Option } = Select;
+
+const componentOptions = [
+  { label: "Entrada externa", value: "Entrada externa" },
+  { label: "Consulta externa", value: "Consulta externa" },
+  { label: "Salida externa", value: "Salida externa" },
+  { label: "Archivo lógico interno", value: "Archivo lógico interno" },
+];
+
+const complexityOptions = [
+  { label: "Bajo", value: "bajo" },
+  { label: "Medio", value: "medio" },
+  { label: "Alto", value: "alto" },
+];
+
+const functionPointsTable = {
+  "Entrada externa": { bajo: 3, medio: 4, alto: 6 },
+  "Consulta externa": { bajo: 3, medio: 4, alto: 6 },
+  "Salida externa": { bajo: 4, medio: 5, alto: 7 },
+  "Archivo lógico interno": { bajo: 7, medio: 10, alto: 15 },
+};
 
 const RequerimientosTM = () => {
   const [projects, setProjects] = useState([]);
@@ -11,6 +34,7 @@ const RequerimientosTM = () => {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [selectedRequirement, setSelectedRequirement] = useState(null);
+  const [isEditingFunctionPoints, setIsEditingFunctionPoints] = useState(false);
   const [form] = Form.useForm();
 
   const fetchProjects = async () => {
@@ -80,6 +104,33 @@ const RequerimientosTM = () => {
         message: "Error",
         description: "Hubo un error al actualizar el requerimiento. Por favor, intenta nuevamente."
       });
+    }
+  };
+
+  const handleComponentTypeChange = (value) => {
+    form.setFieldsValue({ component_type: value });
+    const currentValues = form.getFieldsValue();
+    const complexityLevel = currentValues.complexity_level;
+    if (complexityLevel && !isEditingFunctionPoints) {
+      const functionPoints = functionPointsTable[value][complexityLevel];
+      form.setFieldsValue({ function_points: functionPoints });
+    }
+  };
+
+  const handleComplexityLevelChange = (value) => {
+    form.setFieldsValue({ complexity_level: value });
+    const currentValues = form.getFieldsValue();
+    const componentType = currentValues.component_type;
+    if (componentType && !isEditingFunctionPoints) {
+      const functionPoints = functionPointsTable[componentType][value];
+      form.setFieldsValue({ function_points: functionPoints });
+    }
+  };
+
+  const toggleFunctionPointsEdit = () => {
+    setIsEditingFunctionPoints(!isEditingFunctionPoints);
+    if (!isEditingFunctionPoints) {
+      form.setFieldsValue({ justification: '' });
     }
   };
 
@@ -235,26 +286,49 @@ const RequerimientosTM = () => {
             <Form.Item
               label="Tipo de Componente"
               name="component_type"
+              rules={[{ required: true, message: "Por favor, seleccione el tipo de componente" }]}
             >
-              <Input />
+              <Select onChange={handleComponentTypeChange}>
+                {componentOptions.map((option) => (
+                  <Option key={option.value} value={option.value}>
+                    {option.label}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
             <Form.Item
               label="Nivel de Complejidad"
               name="complexity_level"
+              rules={[{ required: true, message: "Por favor, seleccione el nivel de complejidad" }]}
             >
-              <Input type="number" />
+              <Select onChange={handleComplexityLevelChange}>
+                {complexityOptions.map((option) => (
+                  <Option key={option.value} value={option.value}>
+                    {option.label}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
             <Form.Item
               label="Puntos de Función"
               name="function_points"
+              rules={[{ required: true, message: "Por favor, ingrese los puntos de función" }]}
             >
-              <Input type="number" />
+              <Input type="number" disabled={!isEditingFunctionPoints} />
+              <Button
+                type="link"
+                icon={<EditOutlined />}
+                onClick={toggleFunctionPointsEdit}
+              >
+                Editar
+              </Button>
             </Form.Item>
             <Form.Item
               label="Justificación"
               name="justification"
+              rules={[{ required: isEditingFunctionPoints, message: "Por favor, ingrese la justificación" }]}
             >
-              <Input.TextArea />
+              <Input.TextArea disabled={!isEditingFunctionPoints} />
             </Form.Item>
             <Form.Item>
               <Button type="primary" htmlType="submit">

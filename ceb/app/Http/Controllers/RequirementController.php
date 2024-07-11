@@ -66,7 +66,7 @@ class RequirementController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'component_type' => 'nullable|string|max:255',
-            'complexity_level' => 'nullable|integer',
+            'complexity_level' => 'nullable||string|max:255',
             'function_points' => 'nullable|integer',
             'justification' => 'nullable|string', // Validación para justificación
         ]);
@@ -99,7 +99,7 @@ class RequirementController extends Controller
 
 
 
-    
+
     // Obtener los requerimientos de un proyecto asignado al team member
     public function getProjectRequirements($projectId)
     {

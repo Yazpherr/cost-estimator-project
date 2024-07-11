@@ -23,7 +23,6 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-// ________________PROYECTS-OWNERS________________________________________________________
 // Método para registrar un nuevo usuario (team-member)
 export const registerUser = (userData) => {
   return api.post("/register", userData);
@@ -44,9 +43,15 @@ export const getAuthenticatedUser = () => {
   return api.get("/user");
 };
 
+// ________________PROYECTS-OWNERS________________________________________________________
 // Función para crear un proyecto
 export const createProject = (projectData) =>
   api.post("/crear-proyecto", projectData);
+
+// Función para actualizar un proyecto
+export const updateProject = (id, projectData) => {
+  return api.put(`/actualizar-proyecto/${id}`, projectData);
+};
 
 // Función para obtener los proyectos de un product-owner
 export const getProductOwnerProjects = () => api.get("/mis-proyectos-po");
@@ -73,40 +78,39 @@ export const getAllTeamMembers = () => {
 
 // Función para asignar un miembro del equipo a un proyecto
 export const assignTeamMemberToProject = (assignmentData) => {
-    return api.post("/asignar-miembro-proyecto", assignmentData);
-  };
+  return api.post("/asignar-miembro-proyecto", assignmentData);
+};
 
 // ________________ADMIN________________________________________________________
 
 // Función para crear una nueva profesión
 export const createProfession = (professionData) => {
-    return api.post("/crear-profesion", professionData);
+  return api.post("/crear-profesion", professionData);
 };
 // Función para obtener todas las profesiones
 export const getAllProfessions = () => {
-    return api.get("/obtener-profesiones");
+  return api.get("/obtener-profesiones");
 };
 // Función para actualizar una profesión
 export const updateProfession = (id, professionData) => {
-    return api.put(`/actualizar-profesion/${id}`, professionData);
+  return api.put(`/actualizar-profesion/${id}`, professionData);
 };
-
 
 // ________________TEAM-MEMBERS________________________________________________________
 
 // Función para obtener los proyectos de un team member
 export const getTeamMemberProjects = () => {
-    return api.get("/mis-proyectos-tm");
-  };
-  
+  return api.get("/mis-proyectos-tm");
+};
+
 // Función para obtener los requerimientos de un proyecto
 export const getProjectRequirements = (projectId) => {
-    return api.get(`/proyecto/${projectId}/requerimientos`);
-  };
+  return api.get(`/proyecto/${projectId}/requerimientos`);
+};
 
 // Función para actualizar un requerimiento
 export const updateRequirement = (id, requirementData) => {
-    return api.put(`/actualizar-requerimiento/${id}`, requirementData);
-  };
+  return api.put(`/actualizar-requerimiento/${id}`, requirementData);
+};
 
 export default api;

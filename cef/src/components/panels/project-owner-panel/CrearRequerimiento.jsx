@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { Form, Input, Button, Spin, notification, Table, Modal } from "antd";
-import { createRequirement, getAllRequirements } from "../../../services/api"; // Ruta correcta al archivo api
+import { Form, Input, Button, Spin, notification, Table, Modal, Select } from "antd";
+import { createRequirement, getAllRequirements, getAllTeamMembers } from "../../../services/api"; // Ruta correcta al archivo api
+
+const { Option } = Select;
 
 const CrearRequerimiento = () => {
   const [formData, setFormData] = useState({
@@ -9,11 +11,14 @@ const CrearRequerimiento = () => {
     component_type: "",
     complexity_level: "",
     function_points: "",
-    justification: ""
+    justification: "",
+    team_member_id: ""
   });
   const [loading, setLoading] = useState(false);
   const [requirements, setRequirements] = useState([]);
+  const [teamMembers, setTeamMembers] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [form] = Form.useForm();
 
   const fetchRequirements = async () => {
     setLoading(true);
@@ -30,8 +35,24 @@ const CrearRequerimiento = () => {
     }
   };
 
+  const fetchTeamMembers = async () => {
+    setLoading(true);
+    try {
+      const response = await getAllTeamMembers();
+      setTeamMembers(response.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      notification.error({
+        message: "Error",
+        description: "Hubo un error al obtener los miembros del equipo. Por favor, intenta nuevamente."
+      });
+    }
+  };
+
   useEffect(() => {
     fetchRequirements();
+    fetchTeamMembers();
   }, []);
 
   const handleChange = (e) => {
@@ -41,11 +62,17 @@ const CrearRequerimiento = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSelectChange = (value) => {
+    setFormData({
+      ...formData,
+      team_member_id: value
+    });
+  };
+
+  const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      const response = await createRequirement(formData);
+      const response = await createRequirement(values);
       setLoading(false);
       notification.success({
         message: "Requerimiento creado",
@@ -53,6 +80,7 @@ const CrearRequerimiento = () => {
       });
       setRequirements([...requirements, response.data]); // Actualizar la tabla con el nuevo requerimiento
       setModalVisible(false); // Cerrar el modal después de crear el requerimiento
+      form.resetFields();
     } catch (error) {
       setLoading(false);
       notification.error({
@@ -92,6 +120,11 @@ const CrearRequerimiento = () => {
       title: "Justificación",
       dataIndex: "justification",
       key: "justification"
+    },
+    {
+      title: "ID del Miembro del Equipo",
+      dataIndex: "team_member_id",
+      key: "team_member_id"
     }
   ];
 
@@ -102,7 +135,7 @@ const CrearRequerimiento = () => {
         Crear Requerimiento
       </Button>
       <Spin spinning={loading}>
-        <Table columns={columns} dataSource={requirements} rowKey="id" />
+        <Table columns={columns} dataSource={requirements} rowKey="id_req" />
       </Spin>
 
       <Modal
@@ -112,58 +145,63 @@ const CrearRequerimiento = () => {
         footer={null}
       >
         <Spin spinning={loading}>
-          <Form layout="vertical" onSubmit={handleSubmit}>
-            <Form.Item label="ID del Proyecto" required>
+          <Form layout="vertical" form={form} onFinish={handleSubmit}>
+            <Form.Item label="ID del Proyecto" name="project_id" rules={[{ required: true, message: "Por favor, ingrese el ID del proyecto" }]}>
               <Input
                 type="text"
-                name="project_id"
                 value={formData.project_id}
                 onChange={handleChange}
-                required
               />
             </Form.Item>
-            <Form.Item label="Nombre del Requerimiento" required>
+            <Form.Item label="Nombre del Requerimiento" name="name" rules={[{ required: true, message: "Por favor, ingrese el nombre del requerimiento" }]}>
               <Input
                 type="text"
-                name="name"
                 value={formData.name}
                 onChange={handleChange}
-                required
               />
             </Form.Item>
-            <Form.Item label="Tipo de Componente">
+            <Form.Item label="Tipo de Componente" name="component_type">
               <Input
                 type="text"
-                name="component_type"
                 value={formData.component_type}
                 onChange={handleChange}
               />
             </Form.Item>
-            <Form.Item label="Nivel de Complejidad">
+            <Form.Item label="Nivel de Complejidad" name="complexity_level">
               <Input
                 type="number"
-                name="complexity_level"
                 value={formData.complexity_level}
                 onChange={handleChange}
               />
             </Form.Item>
-            <Form.Item label="Puntos de Función">
+            <Form.Item label="Puntos de Función" name="function_points">
               <Input
                 type="number"
-                name="function_points"
                 value={formData.function_points}
                 onChange={handleChange}
               />
             </Form.Item>
-            <Form.Item label="Justificación">
+            <Form.Item label="Justificación" name="justification">
               <Input.TextArea
-                name="justification"
                 value={formData.justification}
                 onChange={handleChange}
               />
             </Form.Item>
+            <Form.Item label="Asignar a Miembro del Equipo" name="team_member_id">
+              <Select
+                placeholder="Seleccione un miembro del equipo"
+                onChange={handleSelectChange}
+                value={formData.team_member_id}
+              >
+                {teamMembers.map((member) => (
+                  <Option key={member.id_tm} value={member.id_tm}>
+                    {member.user.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" onClick={handleSubmit}>
+              <Button type="primary" htmlType="submit">
                 Crear Requerimiento
               </Button>
             </Form.Item>

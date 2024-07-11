@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Form, Input, Button, Spin, notification, Table, Modal } from "antd";
-import { createProject, getProductOwnerProjects } from "../../../services/api"; // Asegúrate de ajustar la ruta según tu estructura de carpetas
+import { createProject, getProductOwnerProjects, updateProject } from "../../../services/api"; // Asegúrate de ajustar la ruta según tu estructura de carpetas
 
 const CrearProyectoPO = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +15,9 @@ const CrearProyectoPO = () => {
   const [loading, setLoading] = useState(false);
   const [projects, setProjects] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     fetchProjects();
@@ -64,6 +67,33 @@ const CrearProyectoPO = () => {
       });
   };
 
+  const handleEditProject = (project) => {
+    setSelectedProject(project);
+    form.setFieldsValue(project);
+    setEditModalVisible(true);
+  };
+
+  const handleUpdateProject = async (values) => {
+    setLoading(true);
+    try {
+      const response = await updateProject(selectedProject.id_pro, values);
+      setLoading(false);
+      notification.success({
+        message: "Proyecto actualizado",
+        description: "El proyecto se ha actualizado exitosamente.",
+      });
+      fetchProjects(); // Refresh the project list
+      setEditModalVisible(false); // Close the modal
+    } catch (error) {
+      setLoading(false);
+      notification.error({
+        message: "Error",
+        description: "Hubo un error al actualizar el proyecto. Por favor, intenta nuevamente.",
+      });
+      console.error("Hubo un error al actualizar el proyecto:", error);
+    }
+  };
+
   const columns = [
     {
       title: "ID del Proyecto",
@@ -99,6 +129,15 @@ const CrearProyectoPO = () => {
       title: "Costos Asociados",
       dataIndex: "associated_costs",
       key: "associated_costs",
+    },
+    {
+      title: "Acciones",
+      key: "actions",
+      render: (text, record) => (
+        <Button type="primary" onClick={() => handleEditProject(record)}>
+          Editar
+        </Button>
+      ),
     },
   ];
 
@@ -148,6 +187,48 @@ const CrearProyectoPO = () => {
             <Form.Item>
               <Button type="primary" htmlType="submit">
                 Crear Proyecto
+              </Button>
+            </Form.Item>
+          </Form>
+        </Spin>
+      </Modal>
+
+      <Modal
+        title="Editar Proyecto"
+        visible={editModalVisible}
+        onCancel={() => setEditModalVisible(false)}
+        footer={null}
+      >
+        <Spin spinning={loading}>
+          <Form layout="vertical" form={form} onFinish={handleUpdateProject}>
+            <Form.Item
+              label="Nombre del Proyecto"
+              name="name"
+              rules={[{ required: true, message: "Por favor, ingrese el nombre del proyecto" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item label="Descripción" name="description">
+              <Input.TextArea />
+            </Form.Item>
+            <Form.Item label="Puntos Totales de Función" name="total_function_points">
+              <Input type="number" />
+            </Form.Item>
+            <Form.Item label="Valores de Ajuste de Complejidad" name="complexity_adjustment_values">
+              <Input type="number" />
+            </Form.Item>
+            <Form.Item label="Esfuerzo Estimado" name="estimated_effort">
+              <Input type="number" />
+            </Form.Item>
+            <Form.Item label="Tiempo Estimado" name="estimated_time">
+              <Input type="number" />
+            </Form.Item>
+            <Form.Item label="Costos Asociados" name="associated_costs">
+              <Input type="number" />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Actualizar Proyecto
               </Button>
             </Form.Item>
           </Form>

@@ -24,6 +24,7 @@ const SidebarLarge = ({ menuItems }) => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
+        borderRight: '1px solid #d9d9d9', // Borde gris a la derecha
       }}
     >
       <Menu

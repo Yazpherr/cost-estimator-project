@@ -58,7 +58,6 @@ Route::middleware('auth:api')->group(function () {
         Route::get('obtener-requerimientos', [RequirementController::class, 'getAllRequirements']); // Ruta para obtener todos los requerimientos
 
 
-
         // REGISTRO DE TEAM MEMBERS
         Route::get('obtener-miembros-equipo', [TeamMemberController::class, 'getTeamMembers']); // Obtener todos los miembros del equipo
         Route::post('crear-miembro-equipo', [TeamMemberController::class, 'store']); // Crear un nuevo miembro del equipo

@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom";
 import SidebarLarge from "../../UI/SidebarLarge";
 import SidebarResponsive from "../../UI/SidebarResponsive";
-import { FaHome, FaUserPlus } from "react-icons/fa";
+import { FaUserPlus } from "react-icons/fa";
 
 const ProjectOwnerLayout = () => {
   const menuItems = [
-    { name: "Inicio", path: "/product-owner/home", icon: <FaHome /> },
+    // { name: "Inicio", path: "/product-owner/home", icon: <FaHome /> },
     { name: "Proyectos", path: "/product-owner/register-project", icon: <FaUserPlus /> },
     { name: "Requerimiento", path: "/product-owner/register-requirement", icon: <FaUserPlus /> },
     { name: "Miebros de equipo", path: "/product-owner/register-team-member", icon: <FaUserPlus /> },

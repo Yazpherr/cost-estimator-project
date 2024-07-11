@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Alert } from 'antd';
 import { AuthContext } from '../contexts/AuthContext';
 import NavBarSoloLogo from '../components/NavBarSoloLogo';
 
@@ -59,37 +59,45 @@ const Login = () => {
             <p className="text-gray-600 text-base md:text-lg mt-8">Ingresa tus datos para acceder</p>
           </div>
 
-          <Form form={form} layout="vertical" onFinish={handleLogin} className="space-y-6 mt-4">
-            <div className="mb-4">
-              {visibleAlertError && (
-                <div className="alert alert-danger">
-                  <strong>{tituloAlerta}</strong> {descripcionAlerta}
-                </div>
-              )}
-            </div>
+          {visibleAlertError && (
+            <Alert
+              message={tituloAlerta}
+              description={descripcionAlerta}
+              type="error"
+              showIcon
+              className="mb-4"
+            />
+          )}
 
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleLogin}
+            className="space-y-6 mt-4"
+          >
             <Form.Item
               name="email"
-              hasFeedback
               label="Correo electrónico"
               rules={[
                 { required: true, message: 'Ingresa tu correo electrónico' },
-                { pattern: /^\S+@\S+\.\S+$/, message: 'Correo electrónico inválido' },
+                { type: 'email', message: 'Correo electrónico inválido' },
               ]}
+              hasFeedback
             >
               <Input
                 type="email"
                 placeholder="Ingresar correo electrónico"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoFocus
               />
             </Form.Item>
 
             <Form.Item
-              hasFeedback
               name="password"
               label="Contraseña"
               rules={[{ required: true, message: 'Ingresa tu contraseña' }]}
+              hasFeedback
             >
               <Input.Password
                 placeholder="Ingresar contraseña"
@@ -98,11 +106,12 @@ const Login = () => {
               />
             </Form.Item>
 
-            <Form.Item className="space-y-2">
+            <Form.Item>
               <Button
-                className="w-full bg-gradient-to-r from-blue-500 to-blue-800 text-white px-6 py-3 rounded-md hover:opacity-90 transition duration-300"
-                loading={isLoadingButton}
+                type="primary"
                 htmlType="submit"
+                loading={isLoadingButton}
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-800 text-white px-6 py-3 rounded-md hover:opacity-90 transition duration-300"
               >
                 Iniciar sesión
               </Button>

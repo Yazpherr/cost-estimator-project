@@ -15,7 +15,7 @@ const CrearMiembroEquipo = () => {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [teamMembers, setTeamMembers] = useState([]);
   const [professions, setProfessions] = useState([]);
-  const [currentMember, setCurrentMember] = useState(null);
+  const [currentTeamMember, setCurrentTeamMember] = useState(null);
 
   const fetchTeamMembers = async () => {
     setLoading(true);
@@ -69,7 +69,7 @@ const CrearMiembroEquipo = () => {
         message: "Miembro del equipo creado",
         description: "El miembro del equipo se ha creado exitosamente."
       });
-      fetchTeamMembers(); // Refrescar la tabla con los miembros del equipo
+      fetchTeamMembers(); // Refrescar la tabla después de crear el miembro del equipo
       setModalVisible(false); // Cerrar el modal después de crear el miembro del equipo
     } catch (error) {
       setLoading(false);
@@ -82,24 +82,25 @@ const CrearMiembroEquipo = () => {
   };
 
   const handleEdit = (record) => {
-    setCurrentMember(record);
+    setCurrentTeamMember(record);
     setFormData({
-      profession_id: record.profession.id_prof,
+      name: record.user.name,
+      email: record.user.email,
+      profession_id: record.profession.id_prof
     });
     setEditModalVisible(true);
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
+  const handleUpdate = async () => {
     setLoading(true);
     try {
-      const response = await updateTeamMember(currentMember.id_tm, { profession_id: formData.profession_id });
+      const response = await updateTeamMember(currentTeamMember.id_tm, formData);
       setLoading(false);
       notification.success({
         message: "Miembro del equipo actualizado",
         description: "El miembro del equipo se ha actualizado exitosamente."
       });
-      fetchTeamMembers(); // Refrescar la tabla con los miembros del equipo
+      fetchTeamMembers(); // Refrescar la tabla después de actualizar el miembro del equipo
       setEditModalVisible(false); // Cerrar el modal después de actualizar el miembro del equipo
     } catch (error) {
       setLoading(false);
@@ -197,7 +198,7 @@ const CrearMiembroEquipo = () => {
                 required
               />
             </Form.Item>
-            <Form.Item label="ID de Profesión" required>
+            <Form.Item label="Profesión" required>
               <Select
                 name="profession_id"
                 value={formData.profession_id}
@@ -227,8 +228,26 @@ const CrearMiembroEquipo = () => {
         footer={null}
       >
         <Spin spinning={loading}>
-          <Form layout="vertical" onSubmit={handleUpdate}>
-            <Form.Item label="ID de Profesión" required>
+          <Form layout="vertical" onFinish={handleUpdate}>
+            <Form.Item label="Nombre" required>
+              <Input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </Form.Item>
+            <Form.Item label="Email" required>
+              <Input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </Form.Item>
+            <Form.Item label="Profesión" required>
               <Select
                 name="profession_id"
                 value={formData.profession_id}
@@ -243,7 +262,7 @@ const CrearMiembroEquipo = () => {
               </Select>
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" onClick={handleUpdate}>
+              <Button type="primary" htmlType="submit">
                 Actualizar Miembro del Equipo
               </Button>
             </Form.Item>

@@ -81,16 +81,32 @@ export const assignTeamMemberToProject = (assignmentData) => {
 // Función para crear una nueva profesión
 export const createProfession = (professionData) => {
     return api.post("/crear-profesion", professionData);
-  };
+};
 // Función para obtener todas las profesiones
 export const getAllProfessions = () => {
     return api.get("/obtener-profesiones");
-  };
-  // Función para actualizar una profesión
+};
+// Función para actualizar una profesión
 export const updateProfession = (id, professionData) => {
     return api.put(`/actualizar-profesion/${id}`, professionData);
+};
+
+
+// ________________TEAM-MEMBERS________________________________________________________
+
+// Función para obtener los proyectos de un team member
+export const getTeamMemberProjects = () => {
+    return api.get("/mis-proyectos-tm");
+  };
+  
+// Función para obtener los requerimientos de un proyecto
+export const getProjectRequirements = (projectId) => {
+    return api.get(`/proyecto/${projectId}/requerimientos`);
   };
 
-
+// Función para actualizar un requerimiento
+export const updateRequirement = (id, requirementData) => {
+    return api.put(`/actualizar-requerimiento/${id}`, requirementData);
+  };
 
 export default api;

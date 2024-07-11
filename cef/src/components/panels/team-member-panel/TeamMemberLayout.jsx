@@ -6,7 +6,8 @@ import { FaHome, FaTasks } from "react-icons/fa";
 const TeamMemberLayout = () => {
   const menuItems = [
     { name: "Inicio", path: "/team-member/home", icon: <FaHome /> },
-    { name: "Tareas", path: "/team-member/tasks", icon: <FaTasks /> },
+    { name: "Proyectos", path: "/team-member/proyectos-tm", icon: <FaTasks /> },
+    { name: "Requerimientos", path: "/team-member/requerimientos-tm", icon: <FaTasks /> },
   ];
 
   return (

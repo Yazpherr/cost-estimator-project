@@ -95,6 +95,11 @@ class RequirementController extends Controller
         }
     }
 
+
+
+
+
+    
     // Obtener los requerimientos de un proyecto asignado al team member
     public function getProjectRequirements($projectId)
     {

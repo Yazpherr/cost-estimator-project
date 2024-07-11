@@ -80,8 +80,6 @@ Route::middleware('auth:api')->group(function () {
         // Interactuar con los requerimientos
         Route::put('actualizar-requerimiento/{id}', [RequirementController::class, 'update']);
         Route::delete('eliminar-requerimiento/{id}', [RequirementController::class, 'destroy']);
-    });
 
-    // Rutas accesibles para todos los roles autenticados
-    // Route::resource('professions', ProfessionController::class)->only(['index', 'show']);
+    });
 });

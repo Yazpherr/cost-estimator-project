@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Form, Input, Button, Spin, notification, Modal, Table } from "antd";
-import { createProfession, getAllProfessions } from "../../../services/api"; // Ruta correcta al archivo api
+import { createProfession, getAllProfessions, updateProfession } from "../../../services/api"; // Ruta correcta al archivo api
 
 const Profesion = () => {
   const [formData, setFormData] = useState({
@@ -9,7 +9,9 @@ const Profesion = () => {
   });
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [professions, setProfessions] = useState([]);
+  const [currentProfession, setCurrentProfession] = useState(null);
 
   const fetchProfessions = async () => {
     setLoading(true);
@@ -59,6 +61,37 @@ const Profesion = () => {
     }
   };
 
+  const handleEdit = (record) => {
+    setCurrentProfession(record);
+    setFormData({
+      name: record.name,
+      salary: record.salary
+    });
+    setEditModalVisible(true);
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await updateProfession(currentProfession.id_prof, formData);
+      setLoading(false);
+      notification.success({
+        message: "Profesión actualizada",
+        description: "La profesión se ha actualizado exitosamente."
+      });
+      setProfessions(professions.map(prof => (prof.id_prof === currentProfession.id_prof ? response.data : prof)));
+      setEditModalVisible(false); // Cerrar el modal después de actualizar la profesión
+    } catch (error) {
+      setLoading(false);
+      notification.error({
+        message: "Error",
+        description: "Hubo un error al actualizar la profesión. Por favor, intenta nuevamente."
+      });
+      console.error("Hubo un error al actualizar la profesión:", error);
+    }
+  };
+
   const columns = [
     {
       title: "Profesión",
@@ -69,6 +102,13 @@ const Profesion = () => {
       title: "Salario UF",
       dataIndex: "salary",
       key: "salary"
+    },
+    {
+      title: "Acciones",
+      key: "actions",
+      render: (text, record) => (
+        <Button onClick={() => handleEdit(record)}>Editar</Button>
+      )
     }
   ];
 
@@ -114,6 +154,40 @@ const Profesion = () => {
             <Form.Item>
               <Button type="primary" htmlType="submit" onClick={handleSubmit}>
                 Crear Profesión
+              </Button>
+            </Form.Item>
+          </Form>
+        </Spin>
+      </Modal>
+      <Modal
+        title="Editar Profesión"
+        visible={editModalVisible}
+        onCancel={() => setEditModalVisible(false)}
+        footer={null}
+      >
+        <Spin spinning={loading}>
+          <Form layout="vertical" onSubmit={handleUpdate}>
+            <Form.Item label="Nombre" required>
+              <Input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </Form.Item>
+            <Form.Item label="Salario" required>
+              <Input
+                type="number"
+                name="salary"
+                value={formData.salary}
+                onChange={handleChange}
+                required
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" onClick={handleUpdate}>
+                Actualizar Profesión
               </Button>
             </Form.Item>
           </Form>

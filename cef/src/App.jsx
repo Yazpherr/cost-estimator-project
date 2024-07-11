@@ -8,7 +8,7 @@ import LandingPage from "./views/LandingPage";
 // RUTAS PARA LOS ADMINISTRADORES
 import AdminLayout from "./components/panels/admin-panel/AdminLayout";
 import Profesion from "./components/panels/admin-panel/Profesion";
-
+import PuntosDeFuncion from "./components/panels/admin-panel/PuntosDeFuncion";
 
 // RUTA PARA LOS PROJECTS-OWNERS
 import ProjectOwnerLayout from "./components/panels/project-owner-panel/ProjectOwnerLayout";
@@ -18,9 +18,10 @@ import CrearRequerimiento from "./components/panels/project-owner-panel/CrearReq
 import RegistrarTeamMembers from "./components/panels/project-owner-panel/RegistrarTeamMembers";
 import AsignarTeamMemberProyecto from "./components/panels/project-owner-panel/AsignarTeamMemberProyecto";
 
-
 // RUTAS PARA LOS TEAMS MEMBERS
-import TeamMemberHome from "./components/panels/team-member-panel/TeamMemberHome";
+import TeamMemberLayout from "./components/panels/team-member-panel/TeamMemberLayout";
+import RequerimientosTM from "./components/panels/team-member-panel/RequerimientosTM";
+import ProyectosTM from "./components/panels/team-member-panel/ProyectosTM";
 
 const App = () => {
   return (
@@ -41,6 +42,7 @@ const App = () => {
             }
           >
             <Route path="profesion" element={<Profesion />} />
+            <Route path="puntos-de-funcion" element={<PuntosDeFuncion />} />
           </Route>
 
           {/* Ruta para los administradores */}
@@ -68,15 +70,18 @@ const App = () => {
             />
           </Route>
 
-          {/* Ruta para los teams members */}
+          {/* Ruta para los team members */}
           <Route
             path="/team-member"
             element={
               <ProtectedRoute>
-                <TeamMemberHome />
+                <TeamMemberLayout />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="proyectos-tm" element={<ProyectosTM />} />
+            <Route path="requerimientos-tm" element={<RequerimientosTM />} />
+          </Route>
         </Routes>
       </AuthProvider>
     </Router>

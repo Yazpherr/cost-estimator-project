@@ -145,11 +145,11 @@ const CrearProyectoPO = () => {
       dataIndex: "total_function_points",
       key: "total_function_points",
     },
-    {
-      title: "Esfuerzo Estimado",
-      dataIndex: "estimated_effort",
-      key: "estimated_effort",
-    },
+    // {
+    //   title: "Esfuerzo Estimado",
+    //   dataIndex: "estimated_effort",
+    //   key: "estimated_effort",
+    // },
     {
       title: "Tiempo Estimado (Horas Hombre / Días Laborales)",
       key: "estimated_time_days",
@@ -158,7 +158,7 @@ const CrearProyectoPO = () => {
       ),
     },
     {
-      title: "Costos Asociados",
+      title: "Costos Asociados UF",
       dataIndex: "associated_costs",
       key: "associated_costs",
     },

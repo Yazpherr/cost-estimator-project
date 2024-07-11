@@ -48,4 +48,9 @@ export const getAuthenticatedUser = () => {
 export const createProject = (projectData) =>
   api.post("/crear-proyecto", projectData);
 
+// Función para obtener los proyectos de un product-owner
+export const getProductOwnerProjects = () =>
+    api.get("/mis-proyectos-po");
+
+
 export default api;

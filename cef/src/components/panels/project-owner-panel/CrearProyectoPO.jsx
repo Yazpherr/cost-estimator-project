@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Form, Input, Button, Spin, notification } from "antd";
-import { createProject } from "../../../services/api"; // Asegúrate de ajustar la ruta según tu estructura de carpetas
+import React, { useState, useEffect } from "react";
+import { Form, Input, Button, Spin, notification, Table, Modal } from "antd";
+import { createProject, getProductOwnerProjects } from "../../../services/api"; // Asegúrate de ajustar la ruta según tu estructura de carpetas
 
 const CrearProyectoPO = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +13,27 @@ const CrearProyectoPO = () => {
     associated_costs: ""
   });
   const [loading, setLoading] = useState(false);
+  const [projects, setProjects] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    setLoading(true);
+    try {
+      const response = await getProductOwnerProjects();
+      setProjects(response.data);
+    } catch (error) {
+      notification.error({
+        message: 'Error',
+        description: 'Hubo un error al obtener los proyectos. Por favor, intenta nuevamente.'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -31,8 +52,8 @@ const CrearProyectoPO = () => {
           message: 'Proyecto creado',
           description: 'El proyecto se ha creado exitosamente.'
         });
-        console.log(response.data);
-        // Manejar la respuesta del servidor, como mostrar un mensaje de éxito o redirigir
+        fetchProjects(); // Refresh the project list
+        setModalVisible(false); // Close the modal
       })
       .catch(error => {
         setLoading(false);
@@ -41,78 +62,123 @@ const CrearProyectoPO = () => {
           description: 'Hubo un error al crear el proyecto. Por favor, intenta nuevamente.'
         });
         console.error("Hubo un error al crear el proyecto:", error);
-        // Manejar el error, como mostrar un mensaje de error
       });
   };
 
+  const columns = [
+    {
+      title: 'Nombre del Proyecto',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Descripción',
+      dataIndex: 'description',
+      key: 'description',
+    },
+    {
+      title: 'Puntos Totales de Función',
+      dataIndex: 'total_function_points',
+      key: 'total_function_points',
+    },
+    {
+      title: 'Esfuerzo Estimado',
+      dataIndex: 'estimated_effort',
+      key: 'estimated_effort',
+    },
+    {
+      title: 'Tiempo Estimado',
+      dataIndex: 'estimated_time',
+      key: 'estimated_time',
+    },
+    {
+      title: 'Costos Asociados',
+      dataIndex: 'associated_costs',
+      key: 'associated_costs',
+    },
+    // Agrega más columnas según tus necesidades
+  ];
+
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "2rem" }}>
-      <h1>Crear Proyecto</h1>
+    <div style={{ padding: "2rem" }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+        <Button type="primary" onClick={() => setModalVisible(true)}>Crear Proyecto</Button>
+      </div>
       <Spin spinning={loading}>
-        <Form layout="vertical" onSubmit={handleSubmit}>
-          <Form.Item label="Nombre del Proyecto" required>
-            <Input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </Form.Item>
-          <Form.Item label="Descripción">
-            <Input.TextArea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-            />
-          </Form.Item>
-          <Form.Item label="Puntos Totales de Función">
-            <Input
-              type="number"
-              name="total_function_points"
-              value={formData.total_function_points}
-              onChange={handleChange}
-            />
-          </Form.Item>
-          <Form.Item label="Valores de Ajuste de Complejidad">
-            <Input
-              type="number"
-              name="complexity_adjustment_values"
-              value={formData.complexity_adjustment_values}
-              onChange={handleChange}
-            />
-          </Form.Item>
-          <Form.Item label="Esfuerzo Estimado">
-            <Input
-              type="number"
-              name="estimated_effort"
-              value={formData.estimated_effort}
-              onChange={handleChange}
-            />
-          </Form.Item>
-          <Form.Item label="Tiempo Estimado">
-            <Input
-              type="number"
-              name="estimated_time"
-              value={formData.estimated_time}
-              onChange={handleChange}
-            />
-          </Form.Item>
-          <Form.Item label="Costos Asociados">
-            <Input
-              type="number"
-              name="associated_costs"
-              value={formData.associated_costs}
-              onChange={handleChange}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" onClick={handleSubmit}>
-              Crear Proyecto
-            </Button>
-          </Form.Item>
-        </Form>
+        <Table dataSource={projects} columns={columns} rowKey="id" />
       </Spin>
+      <Modal
+        title="Crear Proyecto"
+        visible={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        footer={null}
+      >
+        <Spin spinning={loading}>
+          <Form layout="vertical" onFinish={handleSubmit}>
+            <Form.Item label="Nombre del Proyecto" required>
+              <Input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </Form.Item>
+            <Form.Item label="Descripción">
+              <Input.TextArea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+              />
+            </Form.Item>
+            <Form.Item label="Puntos Totales de Función">
+              <Input
+                type="number"
+                name="total_function_points"
+                value={formData.total_function_points}
+                onChange={handleChange}
+              />
+            </Form.Item>
+            <Form.Item label="Valores de Ajuste de Complejidad">
+              <Input
+                type="number"
+                name="complexity_adjustment_values"
+                value={formData.complexity_adjustment_values}
+                onChange={handleChange}
+              />
+            </Form.Item>
+            <Form.Item label="Esfuerzo Estimado">
+              <Input
+                type="number"
+                name="estimated_effort"
+                value={formData.estimated_effort}
+                onChange={handleChange}
+              />
+            </Form.Item>
+            <Form.Item label="Tiempo Estimado">
+              <Input
+                type="number"
+                name="estimated_time"
+                value={formData.estimated_time}
+                onChange={handleChange}
+              />
+            </Form.Item>
+            <Form.Item label="Costos Asociados">
+              <Input
+                type="number"
+                name="associated_costs"
+                value={formData.associated_costs}
+                onChange={handleChange}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Crear Proyecto
+              </Button>
+            </Form.Item>
+          </Form>
+        </Spin>
+      </Modal>
     </div>
   );
 };

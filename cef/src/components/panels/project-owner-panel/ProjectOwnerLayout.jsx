@@ -7,7 +7,8 @@ const ProjectOwnerLayout = () => {
   const menuItems = [
     { name: "Inicio", path: "/product-owner/home", icon: <FaHome /> },
     { name: "Proyectos", path: "/product-owner/register-project", icon: <FaUserPlus /> },
-    { name: "Requerimiento", path: "/product-owner/register-requirement", icon: <FaUserPlus /> }
+    { name: "Requerimiento", path: "/product-owner/register-requirement", icon: <FaUserPlus /> },
+    { name: "Miebros de equipo", path: "/product-owner/register-team-member", icon: <FaUserPlus /> }
   ];
 
   return (

@@ -44,4 +44,7 @@ export const getAuthenticatedUser = () => {
     return api.get('/user');
 };
 
+
+
+
 export default api;

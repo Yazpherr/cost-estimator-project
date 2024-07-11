@@ -12,6 +12,7 @@ import ProjectOwnerLayout from "./components/panels/project-owner-panel/ProjectO
 import ProjectOwnerHome from "./components/panels/project-owner-panel/ProjectOwnerHome";
 import CrearProyectoPO from "./components/panels/project-owner-panel/CrearProyectoPO";
 import CrearRequerimiento from "./components/panels/project-owner-panel/CrearRequerimiento";
+import RegistrarTeamMembers from "./components/panels/project-owner-panel/RegistrarTeamMembers";
 // RUTAS PARA LOS TEAMS MEMBERS 
 import TeamMemberHome from "./components/panels/team-member-panel/TeamMemberHome";
 
@@ -42,6 +43,7 @@ const App = () => {
             <Route path="home" element={<ProjectOwnerHome />} />
             <Route path="register-project" element={<CrearProyectoPO />} />
             <Route path="register-requirement" element={<CrearRequerimiento />} />
+            <Route path="register-team-member" element={<RegistrarTeamMembers />} />
           </Route>
           <Route
             path="/team-member"

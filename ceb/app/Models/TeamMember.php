@@ -25,4 +25,14 @@ class TeamMember extends Model
     {
         return $this->belongsTo(Profession::class, 'profession_id');
     }
+
+    public function projectMembers()
+    {
+        return $this->hasMany(ProjectMember::class, 'team_member_id', 'id_tm');
+    }
+
+    public function requirements()
+    {
+        return $this->hasMany(Requirement::class, 'team_member_id', 'id_tm');
+    }
 }

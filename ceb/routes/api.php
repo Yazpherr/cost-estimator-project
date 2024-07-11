@@ -40,7 +40,7 @@ Route::middleware('auth:api')->group(function () {
 
     // RUTA PARA JEFES DE PROYECTO
     Route::middleware('role:product-owner')->group(function () {
-        Route::get('mis-proyectos', [ProjectController::class, 'myProjects']);
+        Route::get('mis-proyectos-po', [ProjectController::class, 'myProjectsProductOwner']);
         Route::post('crear-proyecto', [ProjectController::class, 'store']);
         Route::get('proyectos', [ProjectController::class, 'index']);
         Route::get('proyecto/{id}', [ProjectController::class, 'show']);
@@ -67,10 +67,11 @@ Route::middleware('auth:api')->group(function () {
     Route::middleware('role:team-member')->group(function () {
         // aca escriir las rutas de proyectos y requerimientos
         // Obtener los proyectos a los que el miembro del equipo está asignado
-        Route::get('mis-proyectos', [ProjectController::class, 'myAssignedProjects']);
+        // Route::get('mis-proyectos', [ProjectController::class, 'myProjects']);
+        Route::get('mis-proyectos-tm', [ProjectController::class, 'myProjectsTeamMember']);
 
         // Obtener los requerimientos asignados al miembro del equipo
-        Route::get('mis-requerimientos', [RequirementController::class, 'myAssignedRequirements']);
+        Route::get('proyecto/{projectId}/requerimientos', [RequirementController::class, 'getProjectRequirements']);
 
         // Interactuar con los requerimientos
         Route::put('actualizar-requerimiento/{id}', [RequirementController::class, 'update']);

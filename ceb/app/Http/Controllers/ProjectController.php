@@ -10,19 +10,20 @@ class ProjectController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(function ($request, $next) {
-            if (Auth::user() && Auth::user()->role === 'product-owner') {
-                return $next($request);
-            }
-            return response()->json(['message' => 'Unauthorized'], 403);
-        });
+        $this->middleware('auth:api');
     }
 
-    public function myProjects()
+    public function myProjectsProductOwner()
     {
         try {
-            $productOwner = Auth::user()->productOwner;
+            $user = Auth::user();
 
+            // Solo los Product Owners pueden acceder a esta función
+            if ($user->role !== 'product-owner') {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $productOwner = $user->productOwner;
             if (!$productOwner) {
                 return response()->json(['error' => 'El usuario no es un product owner'], 403);
             }
@@ -34,6 +35,33 @@ class ProjectController extends Controller
             return response()->json(['error' => 'No se pudieron obtener los proyectos', 'details' => $e->getMessage()], 500);
         }
     }
+
+    public function myProjectsTeamMember()
+    {
+        try {
+            $user = Auth::user();
+
+            // Solo los Team Members pueden acceder a esta función
+            if ($user->role !== 'team-member') {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $teamMember = $user->teamMember;
+            if (!$teamMember) {
+                return response()->json(['error' => 'El usuario no es un miembro del equipo'], 403);
+            }
+
+            $projects = Project::whereHas('projectMembers', function ($query) use ($teamMember) {
+                $query->where('team_member_id', $teamMember->id_tm);
+            })->get();
+
+            return response()->json($projects, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'No se pudieron obtener los proyectos', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+
 
     public function index()
     {
@@ -53,8 +81,14 @@ class ProjectController extends Controller
         ]);
 
         try {
-            $productOwner = Auth::user()->productOwner;
+            $user = Auth::user();
 
+            // Solo los Product Owners pueden crear proyectos
+            if ($user->role !== 'product-owner') {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $productOwner = $user->productOwner;
             if (!$productOwner) {
                 return response()->json(['error' => 'El usuario no es un product owner'], 403);
             }
@@ -95,16 +129,53 @@ class ProjectController extends Controller
             'associated_costs' => 'nullable|numeric',
         ]);
 
-        $project->update($request->all());
+        try {
+            $user = Auth::user();
 
-        return response()->json($project);
+            // Verificar si el usuario es Product Owner o Team Member y está asignado al proyecto
+            if ($user->role === 'product-owner') {
+                $productOwner = $user->productOwner;
+                if (!$productOwner || $project->product_owner_id !== $productOwner->id_po) {
+                    return response()->json(['error' => 'Unauthorized'], 403);
+                }
+            } elseif ($user->role === 'team-member') {
+                $teamMember = $user->teamMember;
+                if (!$teamMember || !$project->projectMembers->contains('team_member_id', $teamMember->id_tm)) {
+                    return response()->json(['error' => 'Unauthorized'], 403);
+                }
+            } else {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $project->update($request->all());
+
+            return response()->json($project, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'No se pudo actualizar el proyecto', 'details' => $e->getMessage()], 500);
+        }
     }
 
     public function destroy($id)
     {
-        $project = Project::findOrFail($id);
-        $project->delete();
+        try {
+            $project = Project::findOrFail($id);
+            $user = Auth::user();
 
-        return response()->noContent();
+            // Verificar si el usuario es Product Owner y está asignado al proyecto
+            if ($user->role === 'product-owner') {
+                $productOwner = $user->productOwner;
+                if (!$productOwner || $project->product_owner_id !== $productOwner->id_po) {
+                    return response()->json(['error' => 'Unauthorized'], 403);
+                }
+            } else {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $project->delete();
+
+            return response()->noContent();
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'No se pudo eliminar el proyecto', 'details' => $e->getMessage()], 500);
+        }
     }
 }

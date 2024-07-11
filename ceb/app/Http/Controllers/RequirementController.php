@@ -95,7 +95,7 @@ class RequirementController extends Controller
         }
     }
 
-        // Asignar un miembro del equipo a un requerimiento existente
+    // Asignar un miembro del equipo a un requerimiento existente
     public function assignTeamMember(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -134,6 +134,63 @@ class RequirementController extends Controller
             return response()->json(['error' => 'Requirement Not Found', 'details' => $e->getMessage()], 404);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Server Error', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    // Obtener los requerimientos de un proyecto asignado al team member
+
+    // Obtener los requerimientos de un proyecto asignado al team member
+    public function getProjectRequirements($projectId)
+    {
+        try {
+            $user = Auth::user();
+
+            // Verificar si el usuario es Team Member
+            if ($user->role !== 'team-member') {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $teamMember = $user->teamMember;
+
+            if (!$teamMember) {
+                return response()->json(['error' => 'El usuario no es un miembro del equipo'], 403);
+            }
+
+            // Obtener los requerimientos del proyecto asignado al team member
+            $requirements = Requirement::where('project_id', $projectId)
+                                        ->where('team_member_id', $teamMember->id_tm)
+                                        ->get();
+
+            return response()->json($requirements, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'No se pudieron obtener los requerimientos', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+
+    // Obtener todos los requerimientos de los proyectos asignados al team member
+    public function getAllRequirements()
+    {
+        try {
+            $user = Auth::user();
+
+            // Verificar si el usuario es Team Member
+            if ($user->role !== 'team-member') {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $teamMember = $user->teamMember;
+
+            if (!$teamMember) {
+                return response()->json(['error' => 'El usuario no es un miembro del equipo'], 403);
+            }
+
+            // Obtener todos los requerimientos de los proyectos asignados al team member
+            $requirements = Requirement::where('team_member_id', $teamMember->id_tm)->get();
+
+            return response()->json($requirements, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'No se pudieron obtener los requerimientos', 'details' => $e->getMessage()], 500);
         }
     }
 }

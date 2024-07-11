@@ -10,6 +10,7 @@ class ProjectMember extends Model
     use HasFactory;
 
     protected $primaryKey = 'id_pm';
+
     protected $fillable = [
         'project_id',
         'team_member_id',

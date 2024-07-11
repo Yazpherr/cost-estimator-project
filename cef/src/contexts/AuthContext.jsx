@@ -53,8 +53,8 @@ export const AuthProvider = ({ children }) => {
         const role = response.data.user.role;
         if (role === 'admin') {
           navigate('/admin');
-        } else if (role === 'project-owner') {
-          navigate('/project-owner');
+        } else if (role === 'product-owner') {
+          navigate('/product-owner');
         } else if (role === 'team-member') {
           navigate('/team-member');
         }

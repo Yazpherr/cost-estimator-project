@@ -17,6 +17,16 @@ class Project extends Model
 
     public function productOwner()
     {
-        return $this->belongsTo(ProductOwner::class, 'product_owner_id');
+        return $this->belongsTo(ProductOwner::class, 'product_owner_id', 'id_po');
+    }
+
+    public function projectMembers()
+    {
+        return $this->hasMany(ProjectMember::class, 'project_id', 'id_pro');
+    }
+
+    public function requirements()
+    {
+        return $this->hasMany(Requirement::class, 'project_id', 'id_pro');
     }
 }

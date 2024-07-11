@@ -1,40 +1,54 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { FaSignOutAlt } from 'react-icons/fa';
+import { Layout, Menu, Button } from 'antd';
+
+const { Sider } = Layout;
 
 const SidebarLarge = ({ menuItems }) => {
   const { logoutUser } = useContext(AuthContext);
+  const location = useLocation();
 
   const handleLogout = () => {
     logoutUser();
   };
 
   return (
-    <div className="h-screen flex flex-col justify-between border-r border-gray-200 bg-gray-100">
-      <div className="flex-1">
-        <ul className="space-y-2">
-          {menuItems.map((item, index) => (
-            <li key={index} className="p-2 hover:bg-gray-200">
-              <Link to={item.path} className="flex items-center space-x-2">
-                {item.icon}
-                <span>{item.name}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="p-4">
-        <button
+    <Sider
+      width={200}
+      className="site-layout-background"
+      style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+      }}
+    >
+      <Menu
+        mode="inline"
+        selectedKeys={[location.pathname]}
+        style={{ height: '100%', borderRight: 0 }}
+      >
+        {menuItems.map((item, index) => (
+          <Menu.Item key={item.path} icon={item.icon}>
+            <Link to={item.path}>{item.name}</Link>
+          </Menu.Item>
+        ))}
+      </Menu>
+      <div style={{ padding: '200px 10px 10px 10px' }}>
+        <Button
           onClick={handleLogout}
-          className="w-full bg-red-500 text-white py-2 px-4 rounded flex items-center justify-center space-x-2 hover:bg-red-600"
+          type="primary"
+          danger
+          icon={<FaSignOutAlt />}
+          block
         >
-          <FaSignOutAlt />
-          <span>Cerrar sesión</span>
-        </button>
+          Cerrar sesión
+        </Button>
       </div>
-    </div>
+    </Sider>
   );
 };
 

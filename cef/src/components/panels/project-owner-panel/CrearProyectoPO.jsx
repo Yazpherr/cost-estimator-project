@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import { Form, Input, Button, Spin, notification } from "antd";
+import { createProject } from "../../../services/api"; // Asegúrate de ajustar la ruta según tu estructura de carpetas
 
 const CrearProyectoPO = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +24,7 @@ const CrearProyectoPO = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    axios.post('/api/crear-proyecto', formData)
+    createProject(formData)
       .then(response => {
         setLoading(false);
         notification.success({

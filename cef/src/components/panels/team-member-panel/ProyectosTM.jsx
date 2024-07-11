@@ -36,21 +36,21 @@ const ProyectosTM = () => {
       dataIndex: "description",
       key: "description",
     },
-    {
-      title: "Fecha de Inicio",
-      dataIndex: "start_date",
-      key: "start_date",
-    },
-    {
-      title: "Fecha de Finalización",
-      dataIndex: "end_date",
-      key: "end_date",
-    },
-    {
-      title: "Estado",
-      dataIndex: "status",
-      key: "status",
-    }
+    // {
+    //   title: "Fecha de Inicio",
+    //   dataIndex: "start_date",
+    //   key: "start_date",
+    // },
+    // {
+    //   title: "Fecha de Finalización",
+    //   dataIndex: "end_date",
+    //   key: "end_date",
+    // },
+    // {
+    //   title: "Estado",
+    //   dataIndex: "status",
+    //   key: "status",
+    // }
   ];
 
   return (

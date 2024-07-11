@@ -1,13 +1,15 @@
 import { Outlet } from "react-router-dom";
 import SidebarLarge from "../../UI/SidebarLarge";
 import SidebarResponsive from "../../UI/SidebarResponsive";
-import { FaTasks } from "react-icons/fa";
+import ProjectIcon from "../../UI/icons/ProjectIcon"
+import RequerimentIcon from "../../UI/icons/RequerimentIcon"
+
 
 const TeamMemberLayout = () => {
   const menuItems = [
     // { name: "Inicio", path: "/team-member/home", icon: <FaHome /> },
-    { name: "Proyectos", path: "/team-member/proyectos-tm", icon: <FaTasks /> },
-    { name: "Requerimientos", path: "/team-member/requerimientos-tm", icon: <FaTasks /> },
+    { name: "Proyectos", path: "/team-member/proyectos-tm", icon: <ProjectIcon /> },
+    { name: "Requerimientos", path: "/team-member/requerimientos-tm", icon: <RequerimentIcon /> },
   ];
 
   return (

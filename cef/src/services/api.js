@@ -23,7 +23,7 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
+// ________________PROYECTS-OWNERS________________________________________________________
 // Método para registrar un nuevo usuario (team-member)
 export const registerUser = (userData) => {
   return api.post("/register", userData);
@@ -49,23 +49,48 @@ export const createProject = (projectData) =>
   api.post("/crear-proyecto", projectData);
 
 // Función para obtener los proyectos de un product-owner
-export const getProductOwnerProjects = () =>
-    api.get("/mis-proyectos-po");
+export const getProductOwnerProjects = () => api.get("/mis-proyectos-po");
 
 // Función para crear un requerimiento
 export const createRequirement = (requirementData) => {
-    return api.post("/crear-requerimiento", requirementData);
-  };
+  return api.post("/crear-requerimiento", requirementData);
+};
 
-  // Función para obtener todos los requerimientos
+// Función para obtener todos los requerimientos
 export const getAllRequirements = () => {
-    return api.get("/obtener-requerimientos");
-  };
-
+  return api.get("/obtener-requerimientos");
+};
 
 // Función para crear un nuevo miembro del equipo
 export const createTeamMember = (teamMemberData) => {
-    return api.post("/crear-miembro-equipo", teamMemberData);
+  return api.post("/crear-miembro-equipo", teamMemberData);
+};
+
+// Función para obtener todos los miembros del equipo
+export const getAllTeamMembers = () => {
+  return api.get("/obtener-miembros-equipo");
+};
+
+// Función para asignar un miembro del equipo a un proyecto
+export const assignTeamMemberToProject = (assignmentData) => {
+    return api.post("/asignar-miembro-proyecto", assignmentData);
   };
+
+// ________________ADMIN________________________________________________________
+
+// Función para crear una nueva profesión
+export const createProfession = (professionData) => {
+    return api.post("/crear-profesion", professionData);
+  };
+// Función para obtener todas las profesiones
+export const getAllProfessions = () => {
+    return api.get("/obtener-profesiones");
+  };
+  // Función para actualizar una profesión
+export const updateProfession = (id, professionData) => {
+    return api.put(`/actualizar-profesion/${id}`, professionData);
+  };
+
+
 
 export default api;

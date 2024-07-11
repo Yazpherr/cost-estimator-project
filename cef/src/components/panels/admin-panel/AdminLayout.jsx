@@ -5,7 +5,7 @@ import { FaHome, FaUserPlus } from 'react-icons/fa';
 
 const AdminLayout = () => {
   const menuItems = [
-    { name: "Inicio", path: "/admin", icon: <FaHome /> },
+    { name: "Profesion", path: "/admin/profesion", icon: <FaHome /> },
     { name: "Registrar Proyecto", path: "/admin/register-dentist", icon: <FaUserPlus /> },
   ];
 

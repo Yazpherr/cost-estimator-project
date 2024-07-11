@@ -99,4 +99,20 @@ class TeamMemberController extends Controller
             return response()->json(['error' => 'Server Error', 'details' => $e->getMessage()], 500);
         }
     }
+
+    // Obtener todos los miembros del equipo
+    public function getTeamMembers()
+    {
+        $user = Auth::user();
+        if ($user->role !== 'product-owner') {
+            return response()->json(['error' => 'Unauthorized', 'details' => 'Only product owners can view team members'], 403);
+        }
+
+        try {
+            $teamMembers = TeamMember::with('user', 'profession')->get();
+            return response()->json($teamMembers, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Server Error', 'details' => $e->getMessage()], 500);
+        }
+    }
 }

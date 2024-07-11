@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Form, Input, Button, Spin, notification, Modal } from "antd";
-import { createTeamMember } from "../../../services/api"; // Ruta correcta al archivo api
+import { useState, useEffect } from "react";
+import { Form, Input, Button, Spin, notification, Modal, Table } from "antd";
+import { createTeamMember, getAllTeamMembers } from "../../../services/api"; // Ruta correcta al archivo api
 
 const CrearMiembroEquipo = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +12,26 @@ const CrearMiembroEquipo = () => {
   });
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [teamMembers, setTeamMembers] = useState([]);
+
+  const fetchTeamMembers = async () => {
+    setLoading(true);
+    try {
+      const response = await getAllTeamMembers();
+      setTeamMembers(response.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      notification.error({
+        message: "Error",
+        description: "Hubo un error al obtener los miembros del equipo. Por favor, intenta nuevamente."
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchTeamMembers();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -30,7 +50,7 @@ const CrearMiembroEquipo = () => {
         message: "Miembro del equipo creado",
         description: "El miembro del equipo se ha creado exitosamente."
       });
-      console.log(response.data);
+      setTeamMembers([...teamMembers, response.data]); // Actualizar la tabla con el nuevo miembro del equipo
       setModalVisible(false); // Cerrar el modal después de crear el miembro del equipo
     } catch (error) {
       setLoading(false);
@@ -42,12 +62,38 @@ const CrearMiembroEquipo = () => {
     }
   };
 
+  const columns = [
+    {
+      title: "Nombre",
+      dataIndex: ["user", "name"],
+      key: "name"
+    },
+    {
+      title: "Email",
+      dataIndex: ["user", "email"],
+      key: "email"
+    },
+    {
+      title: "Profesión",
+      dataIndex: ["profession", "name"],
+      key: "profession"
+    }
+  ];
+
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "2rem" }}>
-      <h1>Crear Miembro del Equipo</h1>
-      <Button type="primary" style={{ marginBottom: "1rem" }} onClick={() => setModalVisible(true)}>
+    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
+      <h1>Miembros del Equipo</h1>
+      <Button 
+        type="primary" 
+        style={{ marginBottom: "1rem", position: "absolute", top: "2rem", right: "2rem" }} 
+        onClick={() => setModalVisible(true)}
+      >
         Crear Miembro del Equipo
       </Button>
+      <Spin spinning={loading}>
+        <Table columns={columns} dataSource={teamMembers} rowKey="id" />
+      </Spin>
+
       <Modal
         title="Crear Miembro del Equipo"
         visible={modalVisible}

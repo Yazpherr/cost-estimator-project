@@ -55,6 +55,7 @@ Route::middleware('auth:api')->group(function () {
 
 
         // REGISTRO DE TEAM MEMBERS
+        Route::get('obtener-miembros-equipo', [TeamMemberController::class, 'getTeamMembers']); // Obtener todos los miembros del equipo
         Route::post('crear-miembro-equipo', [TeamMemberController::class, 'store']); // Crear un nuevo miembro del equipo
         Route::put('actualizar-miembro-equipo/{id}', [TeamMemberController::class, 'update']); // Actualizar un miembro del equipo
         Route::delete('eliminar-miembro-equipo/{id}', [TeamMemberController::class, 'destroy']); // Eliminar un miembro del equipo
